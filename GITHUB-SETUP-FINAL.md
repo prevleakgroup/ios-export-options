@@ -83,7 +83,7 @@ Get the value:
 1. Go to your Slack workspace
 2. **Browse apps** → search "Incoming Webhooks"
 3. Create webhook
-4. Copy webhook URL (starts with `https://hooks.slack.com/services/...`)
+4. Copy webhook URL (starts with `https://hooks.slack.com/services/<WORKSPACE_ID>/<CHANNEL_ID>/<TOKEN>`)
 
 ---
 

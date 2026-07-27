@@ -23,7 +23,7 @@ const SAMPLE_SECRETS = {
   saferide: {
     'saferide-api-key': 'sk_saferide_live_xyz789abc123',
     'saferide-gcp-service-account': '{"type":"service_account","project_id":"saferide-peld8"}',
-    'saferide-slack-webhook': '<WORKSPACE_ID>/<CHANNEL_ID>/<TOKEN>',
+    'saferide-slack-webhook': 'https://hooks.slack.com/services/<WORKSPACE_ID>/<CHANNEL_ID>/<TOKEN>',
     'saferide-godaddy-api-key': 'YOUR_GODADDY_API_KEY_HERE',
     'saferide-godaddy-api-secret': 'YOUR_GODADDY_API_SECRET_HERE',
     'saferide-payment-provider-key': 'pk_live_saferide_payment_key',
@@ -33,7 +33,7 @@ const SAMPLE_SECRETS = {
   palettemath: {
     'palettemath-api-key': 'sk_palettemath_live_def123ghi456',
     'palettemath-gcp-service-account': '{"type":"service_account","project_id":"saferide-peld8"}',
-    'palettemath-slack-webhook': '<WORKSPACE_ID>/<CHANNEL_ID>/<TOKEN>',
+    'palettemath-slack-webhook': 'https://hooks.slack.com/services/<WORKSPACE_ID>/<CHANNEL_ID>/<TOKEN>',
     'palettemath-godaddy-api-key': 'YOUR_GODADDY_API_KEY_HERE',
     'palettemath-godaddy-api-secret': 'YOUR_GODADDY_API_SECRET_HERE',
     'palettemath-ml-model-config': '{"model":"color-analyzer","version":"2.1.0"}',
@@ -43,7 +43,7 @@ const SAMPLE_SECRETS = {
   qvedic: {
     'qvedic-api-key': 'sk_qvedic_live_jkl456mno789',
     'qvedic-gcp-service-account': '{"type":"service_account","project_id":"saferide-peld8"}',
-    'qvedic-slack-webhook': '<WORKSPACE_ID>/<CHANNEL_ID>/<TOKEN>',
+    'qvedic-slack-webhook': 'https://hooks.slack.com/services/<WORKSPACE_ID>/<CHANNEL_ID>/<TOKEN>',
     'qvedic-godaddy-api-key': 'YOUR_GODADDY_API_KEY_HERE',
     'qvedic-godaddy-api-secret': 'YOUR_GODADDY_API_SECRET_HERE',
     'qvedic-content-delivery-token': 'cdn_token_qvedic_live',
@@ -53,7 +53,7 @@ const SAMPLE_SECRETS = {
   plumber: {
     'plumber-api-key': 'sk_plumber_live_pqr012stu345',
     'plumber-gcp-service-account': '{"type":"service_account","project_id":"saferide-peld8"}',
-    'plumber-slack-webhook': '<WORKSPACE_ID>/<CHANNEL_ID>/<TOKEN>',
+    'plumber-slack-webhook': 'https://hooks.slack.com/services/<WORKSPACE_ID>/<CHANNEL_ID>/<TOKEN>',
     'plumber-godaddy-api-key': 'YOUR_GODADDY_API_KEY_HERE',
     'plumber-godaddy-api-secret': 'YOUR_GODADDY_API_SECRET_HERE',
     'plumber-scheduling-token': 'sched_token_plumber_live',

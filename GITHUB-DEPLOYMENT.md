@@ -361,7 +361,7 @@ Solution: Run "Manage Brand Secrets" workflow with action: "verify"
 ### Slack Notifications Not Sending
 ```
 Solution: Verify SLACK_WEBHOOK secret is set correctly
-Check webhook URL format: <WORKSPACE_ID>/<CHANNEL_ID>/<TOKEN>
+Check webhook URL format: https://hooks.slack.com/services/<WORKSPACE_ID>/<CHANNEL_ID>/<TOKEN>
 ```
 
 ## Support
