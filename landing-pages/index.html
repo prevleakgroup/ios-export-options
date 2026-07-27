@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prevleak Group - Solutions</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        
+        /* Navigation */
+        nav { background: #fff; border-bottom: 1px solid #e5e5e5; padding: 20px 0; position: sticky; top: 0; z-index: 100; }
+        nav .container { display: flex; justify-content: space-between; align-items: center; }
+        .brand-title { font-size: 24px; font-weight: 600; color: #1a1a1a; }
+        nav a { color: #666; text-decoration: none; margin-left: 30px; font-size: 14px; transition: color 0.3s; }
+        nav a:hover { color: #000; }
+        
+        /* Hero Section */
+        .hero { background: linear-gradient(135deg, #f5f5f5 0%, #fff 100%); padding: 80px 0; text-align: center; }
+        .hero h1 { font-size: 48px; font-weight: 700; margin-bottom: 20px; color: #1a1a1a; line-height: 1.2; }
+        .hero p { font-size: 20px; color: #666; margin-bottom: 40px; max-width: 600px; margin-left: auto; margin-right: auto; }
+        .cta-group { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+        .btn { padding: 14px 32px; font-size: 16px; font-weight: 600; border: none; cursor: pointer; transition: all 0.3s; text-decoration: none; display: inline-block; }
+        .btn-primary { background: #1a1a1a; color: #fff; }
+        .btn-primary:hover { background: #333; }
+        .btn-secondary { background: #fff; color: #1a1a1a; border: 2px solid #1a1a1a; }
+        .btn-secondary:hover { background: #f5f5f5; }
+        
+        /* Solutions Section */
+        .solutions { padding: 80px 0; }
+        .section-title { font-size: 36px; font-weight: 700; margin-bottom: 50px; text-align: center; color: #1a1a1a; }
+        .solutions-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 40px; }
+        .solution-card { background: #fff; padding: 40px; border: 1px solid #e5e5e5; }
+        .solution-card h3 { font-size: 20px; margin-bottom: 15px; color: #1a1a1a; }
+        .solution-card p { color: #666; font-size: 14px; line-height: 1.7; }
+        
+        /* Footer */
+        footer { background: #1a1a1a; color: #fff; padding: 40px 0; margin-top: 80px; text-align: center; font-size: 14px; }
+        footer p { margin-bottom: 10px; }
+        footer a { color: #fff; text-decoration: none; }
+        footer a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <div class="brand-title">Prevleak Group</div>
+            <div>
+                <a href="#solutions">Solutions</a>
+                <a href="#contact">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Enterprise Solutions for Modern Challenges</h1>
+            <p>Secure, scalable, and intelligent systems designed to power your business forward.</p>
+            <div class="cta-group">
+                <button class="btn btn-primary">Get Started</button>
+                <button class="btn btn-secondary">Learn More</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="solutions" id="solutions">
+        <div class="container">
+            <h2 class="section-title">Our Solutions</h2>
+            <div class="solutions-grid">
+                <div class="solution-card">
+                    <h3>🔒 SafeRide</h3>
+                    <p>Intelligent mobility solutions with real-time safety, route optimization, and driver intelligence powered by advanced analytics.</p>
+                </div>
+                <div class="solution-card">
+                    <h3>🚨 PrevLeak</h3>
+                    <p>Threat detection and incident prediction. Proactive security monitoring with AI-powered anomaly detection.</p>
+                </div>
+                <div class="solution-card">
+                    <h3>🎨 PaletteMath</h3>
+                    <p>AI-powered color intelligence and palette generation. Professional design tools for creative teams and businesses.</p>
+                </div>
+                <div class="solution-card">
+                    <h3>📚 Qvedic</h3>
+                    <p>Personalized content recommendations and engagement optimization. Deliver the right message at the right time.</p>
+                </div>
+                <div class="solution-card">
+                    <h3>📱 Plumber</h3>
+                    <p>Dispatch optimization and demand forecasting. Streamline operations and maximize resource efficiency.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer id="contact">
+        <div class="container">
+            <p><strong>Prevleak Group</strong></p>
+            <p>Transforming industries with intelligent solutions</p>
+            <p style="margin-top: 20px; font-size: 12px;">© 2026 Prevleak Group. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
