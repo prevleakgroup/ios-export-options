@@ -1,0 +1,144 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ============================================================================
+    // BRAND ISOLATION RULES - Each brand operates in its own namespace
+    // ============================================================================
+
+    // PALETTEMATH BRAND - Isolated collection
+    match /brands/palettemath/{document=**} {
+      allow read, write: if request.auth != null && 
+        request.auth.customClaims.brand == 'palettemath' &&
+        request.auth.customClaims.role in ['user', 'admin'];
+      
+      // Deny all access from other brands
+      match /{anyOtherPath=**} {
+        allow read, write: if false;
+      }
+    }
+
+    // SAFERIDE BRAND - Isolated collection
+    match /brands/saferide/{document=**} {
+      allow read, write: if request.auth != null && 
+        request.auth.customClaims.brand == 'saferide' &&
+        request.auth.customClaims.role in ['user', 'admin', 'driver', 'rider'];
+      
+      // Driver-specific permissions
+      match /drivers/{driverId=**} {
+        allow read, write: if request.auth != null &&
+          request.auth.customClaims.brand == 'saferide' &&
+          request.auth.customClaims.role == 'driver' &&
+          request.auth.uid == driverId;
+      }
+
+      // Rider-specific permissions
+      match /riders/{riderId=**} {
+        allow read, write: if request.auth != null &&
+          request.auth.customClaims.brand == 'saferide' &&
+          request.auth.customClaims.role == 'rider' &&
+          request.auth.uid == riderId;
+      }
+
+      // Deny all access from other brands
+      match /{anyOtherPath=**} {
+        allow read, write: if false;
+      }
+    }
+
+    // PREVLEAK BRAND - Isolated collection
+    match /brands/prevleak/{document=**} {
+      allow read, write: if request.auth != null && 
+        request.auth.customClaims.brand == 'prevleak' &&
+        request.auth.customClaims.role in ['user', 'admin', 'operator', 'field_tech'];
+      
+      // Field operations - location-based access
+      match /fieldOperations/{opId=**} {
+        allow read, write: if request.auth != null &&
+          request.auth.customClaims.brand == 'prevleak' &&
+          request.auth.customClaims.role == 'field_tech';
+      }
+
+      // Deny all access from other brands
+      match /{anyOtherPath=**} {
+        allow read, write: if false;
+      }
+    }
+
+    // QVEDIC BRAND - Isolated collection
+    match /brands/qvedic/{document=**} {
+      allow read, write: if request.auth != null && 
+        request.auth.customClaims.brand == 'qvedic' &&
+        request.auth.customClaims.role in ['user', 'admin'];
+      
+      // Deny all access from other brands
+      match /{anyOtherPath=**} {
+        allow read, write: if false;
+      }
+    }
+
+    // PLUMBER BRAND - Isolated collection
+    match /brands/plumber/{document=**} {
+      allow read, write: if request.auth != null && 
+        request.auth.customClaims.brand == 'plumber' &&
+        request.auth.customClaims.role in ['user', 'admin', 'technician', 'dispatcher'];
+      
+      // Work order access - technicians only
+      match /workorders/{woId=**} {
+        allow read, write: if request.auth != null &&
+          request.auth.customClaims.brand == 'plumber' &&
+          request.auth.customClaims.role == 'technician';
+      }
+
+      // Deny all access from other brands
+      match /{anyOtherPath=**} {
+        allow read, write: if false;
+      }
+    }
+
+    // ============================================================================
+    // SHARED COLLECTIONS - Cross-brand access restricted
+    // ============================================================================
+
+    // Workflow execution logs - Brand-scoped only
+    match /workflow_executions/{executionId=**} {
+      allow read, write: if request.auth != null &&
+        resource.data.brandName == request.auth.customClaims.brand;
+    }
+
+    // Shared workflow data - Brand-scoped only
+    match /shared_workflow_data/{dataId=**} {
+      allow read, write: if request.auth != null &&
+        resource.data.brandName == request.auth.customClaims.brand;
+    }
+
+    // Analytics - Brand-scoped only
+    match /analytics_events/{eventId=**} {
+      allow create: if request.auth != null &&
+        request.resource.data.brand == request.auth.customClaims.brand;
+      
+      allow read: if request.auth != null &&
+        request.query.where('brand', '==', request.auth.customClaims.brand);
+    }
+
+    // ============================================================================
+    // ADMIN COLLECTIONS - Admin-only access, brand-scoped
+    // ============================================================================
+
+    match /admin/configurations {
+      allow read: if request.auth != null && 
+        request.auth.customClaims.role == 'admin' &&
+        get(/databases/$(database)/documents/brands/$(request.auth.customClaims.brand)).exists();
+
+      allow write: if false; // Prevent accidental writes
+    }
+
+    // ============================================================================
+    // DEFAULT DENY - All other paths blocked
+    // ============================================================================
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

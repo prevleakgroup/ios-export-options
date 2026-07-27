@@ -1,0 +1,26 @@
+{
+  "name": "saferide-backend-functions",
+  "version": "1.0.0",
+  "private": true,
+  "engines": {
+    "node": "20"
+  },
+  "main": "index.js",
+  "scripts": {
+    "lint": "node -e \"console.log('No lint configured')\""
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "firebase-admin": "^12.5.0",
+    "firebase-functions": "^5.1.1",
+    "@genkit-ai/ai": "^1.40.1",
+    "@genkit-ai/flow": "^1.40.1",
+    "@genkit-ai/vertexai": "^1.40.1",
+    "@google-cloud/aiplatform": "^2.7.0",
+    "@google-cloud/secret-manager": "^4.4.0",
+    "axios": "^1.6.0",
+    "crypto": "^1.0.1",
+    "uuid": "^4.0.0"
+  }
+}

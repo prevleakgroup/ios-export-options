@@ -1,0 +1,40 @@
+{
+  "version": "2026-07-25",
+  "forwarding": [
+    {
+      "domain": "prevleakgroup.com",
+      "mustContain": "https://prevleakgroup.co.za/"
+    },
+    {
+      "domain": "saferiderapp.co.za",
+      "mustContain": "https://prevleakgroup.co.za/customer-hub.html"
+    },
+    {
+      "domain": "saferideapp.co.za",
+      "mustContain": "https://prevleakgroup.co.za/rider/index.html"
+    },
+    {
+      "domain": "saferidesapp.co.za",
+      "mustContain": "https://prevleakgroup.co.za/driver/index.html"
+    },
+    {
+      "domain": "palettemath.net",
+      "mustContain": "https://prevleakgroup.co.za/palettemath.html"
+    }
+  ],
+  "dnsPolicy": {
+    "domains": [
+      "prevleakgroup.co.za",
+      "saferideapp.co.za",
+      "saferiderapp.co.za",
+      "saferidesapp.co.za",
+      "palettemath.net",
+      "prevleakgroup.com"
+    ],
+    "apexTxtRequired": [
+      "T9229417",
+      "v=spf1 include:secureserver.net -all"
+    ],
+    "dmarcRequired": "v=DMARC1; p=reject; rua=mailto:dmarc_rua@onsecureserver.net; adkim=r; aspf=r;"
+  }
+}

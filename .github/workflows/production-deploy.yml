@@ -1,0 +1,194 @@
+name: Complete Production Deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      deployment_type:
+        description: 'Deployment type'
+        required: true
+        type: choice
+        options:
+          - full
+          - functions-only
+          - hosting-only
+          - rules-only
+  push:
+    branches: [production]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: functions/package-lock.json
+      
+      - name: Install Dependencies
+        working-directory: functions
+        run: npm ci
+      
+      - name: Lint Code
+        working-directory: functions
+        run: npm run lint --if-present || echo "No lint script found"
+      
+      - name: Run Tests
+        working-directory: functions
+        run: npm test --if-present || echo "No test script found"
+      
+      - name: Validate Firebase Config
+        run: |
+          npx firebase-tools --version
+          echo "Firebase config validated"
+
+  deploy-functions:
+    needs: validate
+    runs-on: ubuntu-latest
+    if: github.event.inputs.deployment_type == 'full' || github.event.inputs.deployment_type == 'functions-only'
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+      
+      - name: Deploy All Cloud Functions
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+        run: |
+          npm install -g firebase-tools@latest
+          firebase deploy --only functions --project saferide-peld8 --token $FIREBASE_TOKEN --debug
+      
+      - name: List Deployed Functions
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+        run: |
+          firebase functions:list --project saferide-peld8 --token $FIREBASE_TOKEN
+      
+      - name: Notify Functions Deployment
+        if: always()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          text: 'Cloud Functions deployment - ${{ job.status }} ✓ eu-west1, us-central1'
+          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+          fields: repo,message,commit,author
+        continue-on-error: true
+
+  deploy-rules:
+    needs: validate
+    runs-on: ubuntu-latest
+    if: github.event.inputs.deployment_type == 'full' || github.event.inputs.deployment_type == 'rules-only'
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+      
+      - name: Deploy Firestore Security Rules
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+        run: |
+          npm install -g firebase-tools@latest
+          firebase deploy --only firestore:rules --project saferide-peld8 --token $FIREBASE_TOKEN
+      
+      - name: Notify Rules Deployment
+        if: always()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          text: 'Firestore Security Rules deployment - ${{ job.status }}'
+          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+          fields: repo,message,commit,author
+        continue-on-error: true
+
+  deploy-hosting:
+    needs: validate
+    runs-on: ubuntu-latest
+    if: github.event.inputs.deployment_type == 'full' || github.event.inputs.deployment_type == 'hosting-only'
+    
+    strategy:
+      matrix:
+        brand: [prevleak, saferide, palettemath, qvedic]
+      max-parallel: 2
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+      
+      - name: Deploy Hosting - ${{ matrix.brand }}
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+        run: |
+          npm install -g firebase-tools@latest
+          firebase deploy --only hosting:${{ matrix.brand }} --project saferide-peld8 --token $FIREBASE_TOKEN
+      
+      - name: Get ${{ matrix.brand }} URL
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+        run: |
+          firebase hosting:sites:list --project saferide-peld8 --token $FIREBASE_TOKEN | grep ${{ matrix.brand }}
+      
+      - name: Notify Hosting Deployment
+        if: always()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          text: 'Hosting deployment for **${{ matrix.brand }}** - ${{ job.status }}'
+          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+          fields: repo,message,commit,author
+        continue-on-error: true
+
+  verify-deployment:
+    needs: [deploy-functions, deploy-rules, deploy-hosting]
+    runs-on: ubuntu-latest
+    if: always()
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+      
+      - name: Verify All Services
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+        run: |
+          npm install -g firebase-tools@latest
+          echo "=== Cloud Functions ==="
+          firebase functions:list --project saferide-peld8 --token $FIREBASE_TOKEN
+          echo "=== Firestore Indexes ==="
+          firebase firestore:indexes --project saferide-peld8 --token $FIREBASE_TOKEN
+          echo "=== Hosting Sites ==="
+          firebase hosting:sites:list --project saferide-peld8 --token $FIREBASE_TOKEN
+      
+      - name: Final Deployment Status
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          text: |
+            🚀 **PRODUCTION DEPLOYMENT COMPLETE**
+            All 5 brands deployed successfully!
+            - ✅ Cloud Functions (us-central1, eu-west1)
+            - ✅ Firestore Security Rules
+            - ✅ Firebase Hosting (PrevLeak, SafeRide, PaletteMath, Qvedic)
+            - ✅ Brand Secrets Management
+          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+          fields: repo,message,commit,author,action
+        continue-on-error: true

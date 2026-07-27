@@ -1,0 +1,40 @@
+{
+  "id": "firebase-setup-requirements",
+  "version": "2026-07-26",
+  "firebase": {
+    "projectId": "saferide-peld8",
+    "hostingPublicDir": "download-site",
+    "primaryHostingUrl": "https://saferide-peld8.web.app",
+    "appHostingSiteUrl": "https://prevleakgroup.co.za"
+  },
+  "functions": {
+    "source": "functions",
+    "codebase": "default",
+    "nodeEngine": "20"
+  },
+  "securityHeadersRequired": [
+    "X-Content-Type-Options",
+    "X-Frame-Options",
+    "Referrer-Policy",
+    "Permissions-Policy",
+    "Content-Security-Policy",
+    "Strict-Transport-Security",
+    "Cache-Control"
+  ],
+  "github": {
+    "requiredSecretNames": [
+      "FIREBASE_TOKEN"
+    ]
+  },
+  "cloudShell": {
+    "requiredApis": [
+      "iamcredentials.googleapis.com",
+      "iam.googleapis.com",
+      "cloudbuild.googleapis.com",
+      "firebasehosting.googleapis.com",
+      "run.googleapis.com",
+      "artifactregistry.googleapis.com",
+      "storage.googleapis.com"
+    ]
+  }
+}

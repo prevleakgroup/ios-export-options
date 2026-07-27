@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://prevleakgroup.co.za/sitemap.xml

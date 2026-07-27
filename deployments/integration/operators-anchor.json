@@ -1,0 +1,30 @@
+{
+  "version": "2026-07-26",
+  "operators": {
+    "ocdc": {
+      "label": "GitHub OC/DC Holding Operator",
+      "script": "scripts/oc-dc-operator.ps1",
+      "role": "source-governance-and-auto-fix",
+      "anchors": [
+        "deployment-tree-isolation",
+        "public-link-canonicalization",
+        "guardrail-validation"
+      ]
+    },
+    "pcdc": {
+      "label": "Firebase PC/DC Publish Controller",
+      "script": "scripts/pc-dc-operator.ps1",
+      "role": "firebase-project-and-hosting-control",
+      "anchors": [
+        "firebase-project-alias-validation",
+        "hosting-site-inventory",
+        "guardrail-publish-or-validate"
+      ]
+    }
+  },
+  "flow": [
+    "Run OC/DC first for source and link hygiene.",
+    "Run PC/DC second for Firebase project and hosting controls.",
+    "Run external DNS/GoDaddy checks before final production cutover."
+  ]
+}

@@ -1,0 +1,110 @@
+{
+  "brand": "palettemath",
+  "images": {
+    "logo": {
+      "file": "assets/palettemath-logo.svg",
+      "type": "image/svg+xml",
+      "anchor_tags": [
+        "favicon",
+        "apple-touch-icon",
+        "mask-icon"
+      ]
+    },
+    "hero": {
+      "file": "assets/palettemath-logo.svg",
+      "display": "hero-section",
+      "size": "280px"
+    }
+  },
+  "workflow": {
+    "brand_name": "Palettemath",
+    "functions": {
+      "load_brand_assets": {
+        "description": "Load logo and brand images",
+        "triggers": ["page_load"],
+        "operations": [
+          "fetch_logo_svg",
+          "render_favicon",
+          "render_apple_touch_icon",
+          "render_hero_image"
+        ]
+      },
+      "render_header": {
+        "description": "Render branded header with logo and navigation",
+        "triggers": ["page_load", "navigation_change"],
+        "elements": ["logo", "brand_name", "nav_links"],
+        "colors": {
+          "primary": "#0c4c95",
+          "gradient_start": "#e8f1ff",
+          "gradient_end": "#d4e8ff"
+        }
+      },
+      "render_hero_section": {
+        "description": "Display hero content with logo and CTAs",
+        "triggers": ["page_load"],
+        "components": ["logo", "heading", "description", "image"]
+      },
+      "apply_branding": {
+        "description": "Apply Palettemath color scheme globally",
+        "triggers": ["theme_change"],
+        "apply_to": ["headers", "buttons", "borders", "backgrounds"]
+      }
+    },
+    "api_endpoints": {
+      "logo_fetch": "/api/assets/palettemath-logo",
+      "brand_config": "/api/config/palettemath",
+      "content_load": "/api/content/palettemath"
+    }
+  },
+  "apps": {
+    "web": {
+      "entry_point": "https://saferide-peld8.web.app/palettemath-brand",
+      "api_workflow": [
+        "load_config_from_api",
+        "fetch_logo_asset",
+        "render_brand_header",
+        "load_color_scheme",
+        "initialize_navigation"
+      ]
+    },
+    "mobile": {
+      "entry_point": "app://palettemath",
+      "api_workflow": [
+        "verify_app_signature",
+        "load_cached_assets",
+        "fetch_remote_logo",
+        "apply_mobile_theme",
+        "initialize_offline_mode"
+      ]
+    }
+  },
+  "core_engine": {
+    "ml_operations": {
+      "color_analysis": {
+        "function": "analyze_color_palette",
+        "data_inputs": ["user_color_input", "historical_preferences"],
+        "operations": ["contrast_check", "harmony_calc", "accessibility_verify"],
+        "output": "recommended_palette"
+      },
+      "user_preference_learning": {
+        "function": "learn_user_patterns",
+        "data_maintained": ["color_history", "selection_patterns", "preferences"],
+        "ml_model": "preference_clustering",
+        "output": "personalized_recommendations"
+      }
+    },
+    "operational_functions": {
+      "asset_delivery": {
+        "function": "serve_brand_assets",
+        "caching": "aggressive",
+        "formats": ["svg", "png", "webp"],
+        "cdn": "firebase_hosting"
+      },
+      "performance_monitoring": {
+        "function": "track_page_metrics",
+        "metrics": ["load_time", "render_time", "interaction_latency"],
+        "threshold_alerts": true
+      }
+    }
+  }
+}

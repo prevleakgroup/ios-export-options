@@ -1,0 +1,20 @@
+{
+  "id": "dns-prevleakgroup-co-za",
+  "type": "dns-domain",
+  "domain": "prevleakgroup.co.za",
+  "sourcePath": "download-site",
+  "publishTarget": "https://prevleakgroup.co.za/",
+  "forwardingExpected": "https://prevleakgroup.co.za/",
+  "dnsPolicy": {
+    "apexTxtRequired": [
+      "T9229417",
+      "v=spf1 include:secureserver.net -all"
+    ],
+    "dmarcRequired": "v=DMARC1; p=reject; rua=mailto:dmarc_rua@onsecureserver.net; adkim=r; aspf=r;"
+  },
+  "privacyControls": {
+    "containsPublicOnlyContent": true,
+    "separateOperationalData": true,
+    "noRawArtifactLinks": true
+  }
+}

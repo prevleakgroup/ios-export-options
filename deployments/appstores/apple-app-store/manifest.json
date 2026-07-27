@@ -1,0 +1,13 @@
+{
+  "id": "appstore-apple-saferide",
+  "type": "appstore",
+  "store": "apple-app-store",
+  "sourcePath": "download-site",
+  "listingUrl": "https://apps.apple.com/za/",
+  "publishScope": "public-listing-only",
+  "privacyControls": {
+    "containsNoOperationalSecrets": true,
+    "containsNoCustomerRecords": true,
+    "isolatedFromDnsOperationalData": true
+  }
+}

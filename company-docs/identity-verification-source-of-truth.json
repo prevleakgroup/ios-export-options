@@ -1,0 +1,22 @@
+{
+  "version": "2026-07-25",
+  "profilePolicy": {
+    "required": true,
+    "method": "email-verification",
+    "strength": "strong-user-profile"
+  },
+  "verificationEmails": {
+    "sales": "sales@prevleakgroup.company",
+    "support": "support@prevleakgroup.company"
+  },
+  "verificationEndpoints": {
+    "auth": "https://auth.prevleakgroup.co.za/",
+    "uploads": "https://uploads.prevleakgroup.co.za/",
+    "verify": "https://verify.prevleakgroup.co.za/",
+    "customerHub": "https://prevleakgroup.co.za/customer-hub.html"
+  },
+  "requiredPublicAnchors": [
+    "Email verification is required before profile activation.",
+    "Strong user profiles require verified email identity and authenticated access."
+  ]
+}

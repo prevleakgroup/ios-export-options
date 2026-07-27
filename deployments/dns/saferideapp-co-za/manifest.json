@@ -1,0 +1,20 @@
+{
+  "id": "dns-saferideapp-co-za",
+  "type": "dns-domain",
+  "domain": "saferideapp.co.za",
+  "sourcePath": "download-site/rider/index.html",
+  "publishTarget": "https://saferideapp.co.za/",
+  "forwardingExpected": "https://prevleakgroup.co.za/rider/index.html",
+  "dnsPolicy": {
+    "apexTxtRequired": [
+      "T9229417",
+      "v=spf1 include:secureserver.net -all"
+    ],
+    "dmarcRequired": "v=DMARC1; p=reject; rua=mailto:dmarc_rua@onsecureserver.net; adkim=r; aspf=r;"
+  },
+  "privacyControls": {
+    "containsPublicOnlyContent": true,
+    "separateOperationalData": true,
+    "noRawArtifactLinks": true
+  }
+}

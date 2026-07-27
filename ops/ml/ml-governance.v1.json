@@ -1,0 +1,32 @@
+{
+  "version": "1.0.0",
+  "description": "ML governance and reliability standards for operational functions.",
+  "modelRegistry": {
+    "required": ["modelId", "modelName", "task", "version", "owner", "approvedAt", "status"],
+    "allowedStatus": ["candidate", "staging", "production", "retired"],
+    "allowedTasks": ["incident_priority", "dispatch_eta", "risk_scoring", "surge_support"]
+  },
+  "monitoring": {
+    "required": ["latencyP95Ms", "errorRate", "dataDriftPsi", "predictionCoverage"],
+    "thresholds": {
+      "latencyP95MsMax": 1200,
+      "errorRateMax": 0.02,
+      "dataDriftPsiMax": 0.15,
+      "predictionCoverageMin": 0.95
+    }
+  },
+  "controls": {
+    "mustHave": [
+      "human_override_path",
+      "rollback_strategy",
+      "feature_lineage_tracking",
+      "monthly_bias_review",
+      "quarterly_model_recertification"
+    ]
+  },
+  "releaseGates": [
+    "No promotion to production when any monitoring threshold is violated.",
+    "Production models require documented business owner sign-off.",
+    "Any schema change must include backward compatibility notes."
+  ]
+}

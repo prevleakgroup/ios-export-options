@@ -1,0 +1,15 @@
+{
+  "projects": {
+    "default": "saferide-peld8"
+  },
+  "targets": {
+    "saferide-peld8": {
+      "hosting": {
+        "prevleak": ["prevleak-peld8"],
+        "saferide": ["saferide-peld8"],
+        "palettemath": ["palettemath-peld8"],
+        "qvedic": ["qvedic-peld8"]
+      }
+    }
+  }
+}

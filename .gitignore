@@ -1,0 +1,100 @@
+# Dependencies
+node_modules/
+package-lock.json
+npm-debug.log
+
+# Firebase
+.firebase/
+.firebaserc.local
+firebase-debug.log
+
+# Environment
+.env
+.env.local
+.env.*.local
+.env.production.local
+
+# Secrets and Keys
+*.pem
+*.p12
+*.jks
+*.key
+*.pfx
+.ssh/
+credentials.json
+gcp-key.json
+google-service-account.json
+service-account-*.json
+*-service-account.json
+
+# Private Keys and Tokens
+.firebase-token
+firebase-token.txt
+*.token
+auth-token*
+firebase-ci-token
+firebase-credentials
+oauth-credentials.json
+api-keys.json
+secrets.json
+brand-secrets-*.json
+prevleak-secrets.json
+saferide-secrets.json
+palettemath-secrets.json
+qvedic-secrets.json
+plumber-secrets.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Build outputs
+dist/
+build/
+out/
+.next/
+.nuxt/
+*.tgz
+
+# Logs
+logs/
+*.log
+
+# OS
+.DS_Store
+.env.example.copy
+
+# Testing
+coverage/
+.nyc_output/
+
+# Runtime files
+tmp/
+temp/
+cache/
+
+# Platform specific
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Temporary files
+*.tmp
+~*
+
+# Skip sensitive deployment configs (but keep examples)
+deploy-brands.ps1.local
+cloud-shell-publish.sh.local
+setup-deployment.ps1.local
+complete-key-setup.ps1.local
+
+# Allow configuration templates and examples
+!*.example
+!*.sample
+!.gitkeep

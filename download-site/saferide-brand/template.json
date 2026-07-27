@@ -1,0 +1,77 @@
+{
+  "brand": "saferide",
+  "template": {
+    "name": "Saferide Brand Template",
+    "description": "Automated Saferide brand website template for GoDaddy deployment",
+    "version": "1.0.0",
+    "colors": {
+      "primary": "#f28c28",
+      "primary_light": "#fff4e8",
+      "primary_lighter": "#ffe6d0",
+      "primary_pale": "#fed7aa",
+      "secondary": "#475569",
+      "background": "#ffffff"
+    },
+    "typography": {
+      "font_family": "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+      "heading_size": "2.5rem",
+      "heading_weight": 700,
+      "body_size": "1.1rem",
+      "body_weight": 400
+    },
+    "assets": {
+      "logo": "assets/saferide-logo.svg",
+      "favicon": "assets/saferide-logo.svg",
+      "mask_icon": "assets/saferide-logo.svg"
+    },
+    "meta": {
+      "title": "Saferide",
+      "description": "Trusted mobility and support platform.",
+      "theme_color": "#f28c28",
+      "apple_mobile_capable": true
+    },
+    "dns_records": {
+      "cname": [
+        {
+          "name": "www",
+          "value": "saferideapp.co.za"
+        },
+        {
+          "name": "driver",
+          "value": "saferideapp.co.za"
+        },
+        {
+          "name": "rider",
+          "value": "saferiderapp.co.za"
+        }
+      ],
+      "forwarding": [
+        {
+          "domain": "saferideapp.co.za",
+          "target": "saferide-peld8.web.app/saferide-brand",
+          "type": "301_permanent"
+        },
+        {
+          "domain": "saferiderapp.co.za",
+          "target": "saferide-peld8.web.app/saferide-brand",
+          "type": "301_permanent"
+        }
+      ]
+    },
+    "firebase": {
+      "project": "saferide-peld8",
+      "hosting_url": "https://saferide-peld8.web.app/saferide-brand",
+      "routes": [
+        "/saferide-brand/index.html",
+        "/driver/index.html",
+        "/rider/index.html"
+      ]
+    },
+    "automation": {
+      "deploy_trigger": "git push origin main",
+      "deployment_env": "production",
+      "build_command": "npm run build",
+      "assets_dir": "download-site/assets"
+    }
+  }
+}

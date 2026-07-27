@@ -1,0 +1,5 @@
+env:
+  - name: NEXT_PUBLIC_SITE_URL
+    value: https://prevleakgroup.co.za
+    availability:
+      - BUILD

@@ -1,0 +1,27 @@
+{
+  "version": "2026-07-25",
+  "api": {
+    "service": "saferide-backend-functions",
+    "runtime": "node",
+    "primaryRegion": "us-central1",
+    "secondaryRegion": "europe-west1",
+    "endpoints": {
+      "primary": "https://us-central1-saferide-peld8.cloudfunctions.net/apiUsCentral1",
+      "secondary": "https://europe-west1-saferide-peld8.cloudfunctions.net/apiEuropeWest1"
+    },
+    "paths": [
+      "/health",
+      "/profiles/start-registration",
+      "/profiles/verify-email"
+    ]
+  },
+  "networkPolicy": {
+    "strategy": "regional-failover",
+    "timeoutMs": 4000,
+    "retryOn": [
+      "timeout",
+      "5xx",
+      "network-error"
+    ]
+  }
+}

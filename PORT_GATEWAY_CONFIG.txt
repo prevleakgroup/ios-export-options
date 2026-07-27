@@ -1,0 +1,69 @@
+# PORT GATEWAY CONFIGURATION
+# Local development and emulation setup
+
+[DEVELOPMENT ENVIRONMENT]
+Port 5000: Firebase Hosting (Web UI, static content)
+Port 5001: Cloud Functions (API endpoints)
+Port 8080: Firestore Emulator (Database)
+Port 9099: Firebase Auth Emulator
+Port 9199: Cloud Storage Emulator
+Port 4000: Emulator Suite Dashboard
+
+[LOCAL BRAND MAPPING]
+http://localhost:5000/prevleak-site     -> PrevLeak brand
+http://localhost:5000/saferide-site     -> SafeRide brand
+http://localhost:5000/palettemath-site  -> PaletteMath brand
+http://localhost:5000/qvedic-site       -> Qvedic brand
+
+[PRODUCTION BRAND MAPPING]
+https://prevleak-peld8.web.app          -> PrevLeak production
+https://saferide-peld8.web.app          -> SafeRide production
+https://palettemath-peld8.web.app       -> PaletteMath production
+https://qvedic-peld8.web.app            -> Qvedic production
+
+[API GATEWAY - LOCAL]
+http://localhost:5001/auth/signup/email?brand=palettemath
+http://localhost:5001/auth/signin/email?brand=saferide
+http://localhost:5001/auth/device/register?brand=prevleak
+
+[API GATEWAY - PRODUCTION]
+https://us-central1-saferide-peld8.cloudfunctions.net/auth/signup/email?brand=palettemath
+https://us-central1-saferide-peld8.cloudfunctions.net/auth/signin/email?brand=saferide
+https://us-central1-saferide-peld8.cloudfunctions.net/auth/device/register?brand=prevleak
+
+[SOURCE CODE PROTECTION]
+Local Repository:
+  /functions/        -> Cloud Functions source (NOT deployed as source)
+  /shared/           -> Security rules (compiled & deployed)
+  /download-site/    -> Static assets (deployed as compiled)
+  /flutter_app/      -> Mobile app source (compiled to APK/IPA)
+
+Public (Firebase Hosting):
+  Static HTML/CSS/JS only (no source code)
+  Minified and obfuscated
+  Source maps NOT deployed
+
+Public (Cloud Functions):
+  Compiled JavaScript only
+  No .js source files exposed
+  Error messages sanitized
+
+[EMULATOR STARTUP]
+For local development testing:
+  firebase emulators:start
+
+This starts all emulators on their respective ports and allows local testing
+without touching production Firebase services.
+
+[BRAND ISOLATION AT GATEWAY LEVEL]
+Each request includes brand parameter:
+  ?brand=palettemath  -> Routes to PaletteMath brand namespace
+  ?brand=saferide     -> Routes to SafeRide brand namespace
+  ?brand=prevleak     -> Routes to PrevLeak brand namespace
+  ?brand=qvedic       -> Routes to Qvedic brand namespace
+
+Custom JWT claims {brand, role} enforced at:
+  1. HTTP middleware (api routes)
+  2. Firestore Security Rules (database)
+  3. Cloud Function authorization
+  4. Device trust verification

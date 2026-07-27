@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Palettemath - Color education and learning." />
+    <meta name="theme-color" content="#0c4c95" />
+    <link rel="icon" href="assets/palettemath-logo.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="assets/palettemath-logo.svg" />
+    <title>Palettemath</title>
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      .palettemath-header {
+        background: linear-gradient(135deg, #e8f1ff 0%, #d4e8ff 100%);
+        padding: 2rem 0;
+      }
+      .palettemath-hero {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        align-items: center;
+        padding: 2rem 0;
+      }
+      .palettemath-hero img {
+        width: 100%;
+        max-width: 280px;
+        height: auto;
+        filter: drop-shadow(0 8px 16px rgba(12, 76, 149, 0.12));
+      }
+      .palettemath-content h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #0c4c95;
+        margin: 1rem 0;
+        line-height: 1.2;
+      }
+      .palettemath-content p {
+        font-size: 1.1rem;
+        color: #475569;
+        margin: 1rem 0;
+        line-height: 1.7;
+      }
+      .palettemath-eyebrow {
+        color: #0c4c95;
+        font-weight: 600;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      @media (max-width: 768px) {
+        .palettemath-hero {
+          grid-template-columns: 1fr;
+        }
+        .palettemath-content h1 {
+          font-size: 1.8rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="palettemath-header">
+      <nav class="nav container">
+        <a class="brand" href="index.html">
+          <img src="assets/palettemath-logo.svg" alt="Palettemath logo" style="height: 40px;" />
+          <span style="color: #0c4c95; font-weight: 600;">Palettemath</span>
+        </a>
+        <div class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="palettemath.html">Learning</a>
+          <a href="about-us.html">About</a>
+        </div>
+      </nav>
+      <div class="container palettemath-hero">
+        <div class="palettemath-content">
+          <p class="palettemath-eyebrow">Color Education</p>
+          <h1>Palettemath</h1>
+          <p>Professional color education for teams and learners.</p>
+          <p style="font-size: 1rem; color: #0c4c95; font-weight: 500;">Trusted platform for color learning and education.</p>
+        </div>
+        <div style="text-align: center;">
+          <img src="assets/palettemath-logo.svg" alt="Palettemath logo" />
+        </div>
+      </div>
+    </header>
+
+    <main class="container content">
+      <section class="card">
+        <h2>Overview</h2>
+        <p>The experience combines dependable information flow, clear presentation, and a strong user journey. Every section is designed to feel human, trustworthy, and easy to navigate.</p>
+      </section>
+      <section class="info-grid">
+        <article class="info-card">
+          <h3>Brand and documentation</h3>
+          <p>Use the technical requirements page and company resources section to share documentation, policy references, and launch notes.</p>
+        </article>
+        <article class="info-card">
+          <h3>Web and app links</h3>
+          <p><a href="https://play.google.com/store/search?q=PrevLeak%20Group%20Saferide&c=apps" target="_blank" rel="noopener noreferrer">Open on Google Play</a> or <a href="https://apps.apple.com/za/" target="_blank" rel="noopener noreferrer">open on Apple App Store</a> for the dedicated mobile experience.</p>
+        </article>
+      </section>
+
+      <section class="card-grid" style="margin-top: 1rem;">
+        <article class="card">
+          <h2>How to use Palettemath</h2>
+          <p>Open the guided onboarding page for setup steps, explainer video, and the safe Try It demo flow.</p>
+          <div class="stack" style="margin-top: 0.75rem;">
+            <a class="panel" href="palettemath-how-to-use.html">Open How to Use page</a>
+          </div>
+        </article>
+        <article class="card">
+          <h2>API and IP protection</h2>
+          <p>Public pages do not expose API keys, private endpoints, model logic, or source internals. All protected processing should stay behind server-side controls with scoped tokens and rate limits.</p>
+        </article>
+      </section>
+    </main>
+  </body>
+</html>

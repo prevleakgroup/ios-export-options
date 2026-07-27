@@ -1,0 +1,158 @@
+{
+  "brand": "prevleak",
+  "images": {
+    "logo": {
+      "file": "assets/prevleak-logo.svg",
+      "type": "image/svg+xml",
+      "anchor_tags": [
+        "favicon",
+        "apple-touch-icon",
+        "mask-icon"
+      ]
+    },
+    "hero": {
+      "file": "assets/prevleak-logo.svg",
+      "display": "hero-section",
+      "size": "280px"
+    }
+  },
+  "workflow": {
+    "brand_name": "PrevLeak",
+    "functions": {
+      "load_brand_assets": {
+        "description": "Load logo and brand images",
+        "triggers": ["page_load"],
+        "operations": [
+          "fetch_logo_svg",
+          "render_favicon",
+          "render_apple_touch_icon",
+          "render_hero_image"
+        ]
+      },
+      "render_header": {
+        "description": "Render branded header with logo and navigation",
+        "triggers": ["page_load", "navigation_change"],
+        "elements": ["logo", "brand_name", "nav_links"],
+        "colors": {
+          "primary": "#0c4c95",
+          "gradient_start": "#e8f1ff",
+          "gradient_end": "#d4e8ff"
+        }
+      },
+      "render_solutions": {
+        "description": "Display infrastructure solutions",
+        "triggers": ["page_load"],
+        "solutions": ["smart_monitoring", "operations_center", "field_services", "public_reporting"]
+      },
+      "apply_branding": {
+        "description": "Apply PrevLeak color scheme globally",
+        "triggers": ["theme_change"],
+        "apply_to": ["headers", "buttons", "borders", "backgrounds"]
+      }
+    },
+    "api_endpoints": {
+      "logo_fetch": "/api/assets/prevleak-logo",
+      "brand_config": "/api/config/prevleak",
+      "infrastructure_data": "/api/infrastructure/live",
+      "sensor_stream": "/api/sensors/stream",
+      "incident_alerts": "/api/incidents/active"
+    }
+  },
+  "apps": {
+    "web": {
+      "entry_point": "https://saferide-peld8.web.app/prevleak-brand",
+      "api_workflow": [
+        "load_config_from_api",
+        "fetch_logo_asset",
+        "render_brand_header",
+        "load_color_scheme",
+        "initialize_dashboard_widgets",
+        "establish_websocket_connection"
+      ]
+    },
+    "desktop_cm": {
+      "entry_point": "app://prevleak/desktop-cm",
+      "api_workflow": [
+        "authenticate_operator",
+        "load_operator_config",
+        "fetch_prevleak_logo",
+        "apply_command_center_theme",
+        "load_infrastructure_state",
+        "initialize_incident_stream",
+        "connect_sensor_network"
+      ]
+    },
+    "field_app": {
+      "entry_point": "app://prevleak/field",
+      "api_workflow": [
+        "authenticate_field_worker",
+        "load_field_config",
+        "fetch_prevleak_logo",
+        "apply_field_theme",
+        "sync_offline_data",
+        "load_work_assignments"
+      ]
+    },
+    "public_reporting": {
+      "entry_point": "app://prevleak/public",
+      "api_workflow": [
+        "load_public_config",
+        "fetch_prevleak_logo",
+        "apply_public_theme",
+        "load_incident_history",
+        "initialize_report_submission"
+      ]
+    }
+  },
+  "core_engine": {
+    "ml_operations": {
+      "predictive_maintenance": {
+        "function": "predict_infrastructure_failure",
+        "data_inputs": ["sensor_readings", "historical_failures", "maintenance_logs", "environmental_data"],
+        "operations": ["anomaly_detection", "trend_analysis", "risk_scoring", "alert_generation"],
+        "ml_model": "lstm_time_series",
+        "output": "maintenance_alert_priority"
+      },
+      "incident_severity_classification": {
+        "function": "classify_incident_severity",
+        "data_maintained": ["incident_history", "location_context", "infrastructure_criticality"],
+        "ml_model": "multiclass_classification",
+        "output": "severity_level_and_response_priority"
+      },
+      "resource_allocation_optimization": {
+        "function": "optimize_field_team_dispatch",
+        "data_inputs": ["incident_queue", "team_locations", "skill_levels", "availability"],
+        "ml_model": "optimization_algorithm",
+        "output": "optimal_dispatch_assignment"
+      },
+      "pattern_learning": {
+        "function": "learn_infrastructure_patterns",
+        "data_maintained": ["failure_patterns", "seasonal_trends", "maintenance_effectiveness"],
+        "ml_model": "pattern_recognition",
+        "output": "predictive_insights"
+      }
+    },
+    "operational_functions": {
+      "real_time_monitoring": {
+        "function": "monitor_infrastructure_health",
+        "updates": "continuous_stream",
+        "data_points": ["sensor_status", "alert_flags", "maintenance_state", "response_status"],
+        "data_rate": "500ms_intervals"
+      },
+      "incident_management": {
+        "function": "manage_incident_lifecycle",
+        "operations": ["intake", "triage", "dispatch", "tracking", "resolution", "audit_logging"]
+      },
+      "data_aggregation": {
+        "function": "aggregate_multi_source_data",
+        "sources": ["sensor_network", "field_reports", "public_reports", "maintenance_logs"],
+        "aggregation_interval": "real_time"
+      },
+      "compliance_tracking": {
+        "function": "track_sla_and_compliance",
+        "metrics": ["response_time", "resolution_time", "uptime", "maintenance_schedule"],
+        "reporting": "automated_compliance_reports"
+      }
+    }
+  }
+}

@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 560" role="img" aria-label="PrevLeak Desktop CM command module illustration">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#eaf4ff"/>
+      <stop offset="100%" stop-color="#d6e9ff"/>
+    </linearGradient>
+    <linearGradient id="screen" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0f2c4d"/>
+      <stop offset="100%" stop-color="#1f4d80"/>
+    </linearGradient>
+  </defs>
+  <rect x="0" y="0" width="900" height="560" rx="28" fill="url(#bg)"/>
+  <rect x="110" y="70" width="680" height="360" rx="20" fill="#1a3558"/>
+  <rect x="140" y="100" width="620" height="300" rx="14" fill="url(#screen)"/>
+  <rect x="170" y="130" width="220" height="120" rx="12" fill="#2a6ab2" opacity="0.95"/>
+  <rect x="410" y="130" width="320" height="28" rx="8" fill="#3b84d4"/>
+  <rect x="410" y="172" width="320" height="28" rx="8" fill="#3b84d4" opacity="0.85"/>
+  <rect x="410" y="214" width="320" height="28" rx="8" fill="#3b84d4" opacity="0.7"/>
+  <rect x="170" y="270" width="560" height="100" rx="12" fill="#24558f"/>
+  <circle cx="220" cy="320" r="24" fill="#57b1ff"/>
+  <circle cx="300" cy="320" r="24" fill="#7bc2ff"/>
+  <circle cx="380" cy="320" r="24" fill="#9ad1ff"/>
+  <rect x="450" y="305" width="250" height="30" rx="10" fill="#78bdff"/>
+  <rect x="300" y="440" width="300" height="24" rx="12" fill="#203e66"/>
+  <text x="450" y="510" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="30" font-weight="700" fill="#163a64">PrevLeak Desktop CM</text>
+</svg>

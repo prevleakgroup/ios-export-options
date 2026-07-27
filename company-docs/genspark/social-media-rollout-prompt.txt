@@ -1,0 +1,62 @@
+Create a complete social media registration and content rollout brief for the PrevLeak Group portfolio.
+
+Brands to include:
+- PrevLeak Group
+- PrevLeak Smart Manhole Covers
+- Saferide
+- Palettemath
+- Qvedic
+- Plumber App
+- Public Reporting App
+
+Objective:
+- Register or prepare each brand for social media presence across major platforms.
+- Build a 30-day content schedule with 5 posts per day.
+- Keep the tone professional, credible, and brand-led.
+- Use the real logo, product imagery, and brand colors for each brand.
+
+Required deliverables:
+1. Brand social profile setup plan:
+   - Platform list: Instagram, Facebook, LinkedIn, X, TikTok, YouTube Shorts, WhatsApp Business / channel if relevant.
+   - Username strategy, bio structure, profile image guidance, cover image guidance, CTA recommendations.
+   - Handle naming conventions for each brand.
+
+2. 30-day content calendar:
+   - 30 days total.
+   - 5 posts per day.
+   - A mix of: brand awareness, product education, trust and credibility, pilot and case study content, app and web CTA content, community engagement, testimonial-style content, and behind-the-scenes operational content.
+   - Include post type, caption, CTA, visual suggestion, and hashtag set for each post.
+
+3. Content system:
+   - One core content pillar per brand.
+   - One recurring content style per brand.
+   - A weekly rhythm with educational, promotional, and trust-building themes.
+
+4. Brand-specific guidance:
+   - PrevLeak: smart infrastructure, utility accountability, resilient cities.
+- Saferide: safety, mobility, reliability, rider and driver confidence, and petrol surge transparency.
+   - Palettemath: polished product presentation, professional credibility.
+   - Qvedic: innovation, enterprise communication, trusted digital experiences.
+   - Plumber App: field operations, responsive service, practical workflow.
+   - Public Reporting App: public transparency, service response, issue visibility.
+
+7. Paid audience targeting requirements:
+- Saferide paid targeting should prioritize ride-hailing drivers and riders, with copy style aligned to expectations users associate with major platforms such as Uber and Bolt.
+- PrevLeak Group paid targeting should prioritize municipalities, water entities, utility operations leadership, and investor audiences.
+- Include one investor-positioned stream on LinkedIn focused on growth credibility, portfolio governance, and long-horizon infrastructure value.
+
+5. Visual and brand instructions:
+   - Use the uploaded logos and product images as the main visual anchor.
+   - Keep colors aligned to each brand palette.
+   - PrevLeak should use a clean blue-and-white professional look.
+   - Saferide should use a warm white and orange professional look.
+   - Palettemath should use a modern restrained premium tone.
+
+6. Conversion and engagement goals:
+   - Drive traffic to the website.
+   - Encourage app and web CTA clicks.
+   - Build credibility for each brand over the 30-day period.
+
+Output format:
+- Present as a structured rollout brief with sections for each brand and a 30-day calendar table.
+- Make it ready for direct use by a social media manager or marketing team.

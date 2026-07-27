@@ -1,0 +1,20 @@
+{
+  "id": "dns-saferidesapp-co-za",
+  "type": "dns-domain",
+  "domain": "saferidesapp.co.za",
+  "sourcePath": "download-site/driver/index.html",
+  "publishTarget": "https://saferidesapp.co.za/",
+  "forwardingExpected": "https://prevleakgroup.co.za/driver/index.html",
+  "dnsPolicy": {
+    "apexTxtRequired": [
+      "T9229417",
+      "v=spf1 include:secureserver.net -all"
+    ],
+    "dmarcRequired": "v=DMARC1; p=reject; rua=mailto:dmarc_rua@onsecureserver.net; adkim=r; aspf=r;"
+  },
+  "privacyControls": {
+    "containsPublicOnlyContent": true,
+    "separateOperationalData": true,
+    "noRawArtifactLinks": true
+  }
+}

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#2468D6" />
+    <meta name="description" content="Plumber web app for field operations, dispatch, and service verification." />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Plumber App" />
+    <link rel="canonical" href="https://prevleakgroup.co.za/apps/plumber-app.html" />
+    <title>Plumber App | Prevleakgroup™</title>
+    <link rel="manifest" href="manifest-plumber.webmanifest" />
+    <link rel="icon" href="../assets/saferide-logo.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="../assets/saferide-logo.svg" />
+    <link rel="stylesheet" href="../styles.css" />
+  </head>
+  <body class="plumber-app app-support-page">
+    <header class="site-header">
+      <nav class="nav container">
+        <a class="brand" href="../index.html">
+          <img src="../assets/saferide-logo.svg" alt="Saferide logo" />
+          <span>Saferide Operations</span>
+        </a>
+        <div class="nav-links">
+          <a href="../index.html">Home</a>
+          <a href="../prevleak.html">PrevLeak</a>
+          <a href="../brands.html">Brands</a>
+        </div>
+      </nav>
+
+      <div class="container brand-hero">
+        <div>
+          <img class="page-badge" src="../assets/plumber-app-icon.svg" alt="Plumber app icon" />
+          <p class="eyebrow">Field operations app</p>
+          <h1>Practical mobile workflows for service teams and field crews.</h1>
+          <p>Designed for dispatch, incident triage, and service verification, the app makes everyday maintenance work faster, clearer, and easier to document.</p>
+          <div class="actions">
+            <a class="button primary" href="../prevleak.html">See the platform</a>
+            <a class="button secondary" href="../brands.html">View all brands</a>
+          </div>
+          <div class="stack" style="margin-top: 1rem;">
+            <a class="panel" href="https://play.google.com/store/search?q=PrevLeak%20Group%20Saferide&c=apps" target="_blank" rel="noopener noreferrer">Open on Google Play</a>
+            <a class="panel" href="https://apps.apple.com/za/" target="_blank" rel="noopener noreferrer">Open on Apple App Store</a>
+            <a class="panel" href="https://prevleakgroup.co.za/apps/plumber-app.html">Open web app URL</a>
+          </div>
+          <div class="store-stage" style="margin-top: 0.9rem;">
+            <span class="store-chip">Google Play — registration in progress</span>
+            <span class="store-chip">App Store — registration in progress</span>
+          </div>
+        </div>
+        <img src="../assets/plumber-app-icon.svg" alt="Plumber app illustration" />
+      </div>
+    </header>
+
+    <main class="container content">
+      <section class="card-grid">
+        <article class="card">
+          <h2>What it supports</h2>
+          <p>Job capture, routing, incident notes, and completion tracking are all designed to be simple enough for use in the field and clear enough for managers to review later.</p>
+        </article>
+        <article class="card">
+          <h2>How it fits the group</h2>
+          <p>It complements the PrevLeak platform by turning field operations into a repeatable digital workflow for plumbers, maintenance partners, and service teams.</p>
+        </article>
+        <article class="card">
+          <h2>Why it feels professional</h2>
+          <p>Clean navigation, clear status handling, and consistent actions create a dependable experience that works well on both phones and tablets.</p>
+        </article>
+        <article class="card">
+          <h2>Web app mode (store alternative)</h2>
+          <p>This app is available as a browser web app while store publication is in progress. Users can open it in Chrome or Safari and add it to the home screen for app-like access.</p>
+          <p>Email verification is required before profile activation.</p>
+          <p>Strong user profiles require verified email identity and authenticated access.</p>
+          <p><a href="https://prevleakgroup.co.za/customer-hub.html">Open verified onboarding path</a></p>
+        </article>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container footer-row">
+        <p>© 2026 Plumber App • Field Operations</p>
+        <div style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
+          <a href="mailto:sales@prevleakgroup.company?subject=Plumber+Deployment" style="text-decoration: none; color: #d4511f; font-weight: 500;">📧 Request Demo</a>
+          <a href="mailto:support@prevleakgroup.company?subject=Plumber+Support" style="text-decoration: none; color: #d4511f; font-weight: 500;">📧 Get Help</a>
+        </div>
+      </div>
+    </footer>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function () {
+          navigator.serviceWorker.register('./sw.js').catch(function () {
+            // Keep app usable even if service worker registration fails.
+          });
+        });
+      }
+    </script>
+  </body>
+</html>

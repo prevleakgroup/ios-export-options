@@ -1,0 +1,224 @@
+{
+  "version": "2026-07-27",
+  "description": "Firebase Multi-Brand Data Engine Configuration",
+  "firebaseProject": "saferide-peld8",
+  
+  "collections": {
+    "brand_data": {
+      "palettemath": {
+        "collections": {
+          "users_palettemath": "User profiles for PaletteMath",
+          "workflows_palettemath": "Workflow executions",
+          "color_analysis_palettemath": "Color analysis results",
+          "preferences_palettemath": "User preferences and learning",
+          "ml_models_palettemath": "ML models for color analysis"
+        }
+      },
+      "saferide": {
+        "collections": {
+          "users_saferide": "User profiles for SafeRide",
+          "workflows_saferide": "Workflow executions",
+          "ride_matching_saferide": "Ride matching algorithms",
+          "drivers_saferide": "Driver profiles and availability",
+          "riders_saferide": "Rider profiles and history",
+          "ml_models_saferide": "ML models for ride optimization"
+        }
+      },
+      "prevleak": {
+        "collections": {
+          "users_prevleak": "User profiles for PrevLeak",
+          "workflows_prevleak": "Workflow executions",
+          "infrastructure_prevleak": "Infrastructure asset data",
+          "sensors_prevleak": "Sensor readings and telemetry",
+          "incidents_prevleak": "Incident reports and logs",
+          "ml_models_prevleak": "ML models for maintenance prediction"
+        }
+      },
+      "qvedic": {
+        "collections": {
+          "users_qvedic": "User profiles for Qvedic",
+          "workflows_qvedic": "Workflow executions",
+          "content_qvedic": "Content library",
+          "engagement_qvedic": "User engagement metrics",
+          "ml_models_qvedic": "ML models for recommendations"
+        }
+      },
+      "plumber": {
+        "collections": {
+          "users_plumber": "User profiles for Plumber",
+          "workflows_plumber": "Workflow executions",
+          "work_orders_plumber": "Work order database",
+          "field_operations_plumber": "Field service data",
+          "ml_models_plumber": "ML models for dispatch optimization"
+        }
+      }
+    },
+
+    "shared_collections": {
+      "ml_model_registry": {
+        "description": "Central registry for all ML models",
+        "indexes": [
+          { "fields": ["brandName", "status"], "direction": "asc" },
+          { "fields": ["brandName", "type"], "direction": "asc" },
+          { "fields": ["createdAt"], "direction": "desc" }
+        ]
+      },
+      "ml_training_data": {
+        "description": "Training datasets for ML models",
+        "indexes": [
+          { "fields": ["modelId", "createdAt"], "direction": "asc" },
+          { "fields": ["brandName", "createdAt"], "direction": "desc" }
+        ]
+      },
+      "ml_training_executions": {
+        "description": "Model training run history",
+        "indexes": [
+          { "fields": ["modelId", "completedAt"], "direction": "desc" },
+          { "fields": ["brandName", "status"], "direction": "asc" }
+        ]
+      },
+      "ml_inference_results": {
+        "description": "Inference predictions and results",
+        "indexes": [
+          { "fields": ["modelId", "createdAt"], "direction": "desc" },
+          { "fields": ["brandName", "confidence"], "direction": "desc" }
+        ]
+      },
+      "ml_model_monitoring": {
+        "description": "Model drift and performance monitoring",
+        "indexes": [
+          { "fields": ["modelId", "createdAt"], "direction": "desc" },
+          { "fields": ["status", "createdAt"], "direction": "desc" }
+        ]
+      },
+      "workflow_executions": {
+        "description": "Cross-brand workflow executions",
+        "indexes": [
+          { "fields": ["brandName", "status"], "direction": "asc" },
+          { "fields": ["brandName", "createdAt"], "direction": "desc" },
+          { "fields": ["workflowName", "status"], "direction": "asc" }
+        ]
+      },
+      "shared_workflow_data": {
+        "description": "Shared data accessible to ML engine",
+        "indexes": [
+          { "fields": ["brandName", "createdAt"], "direction": "desc" }
+        ]
+      },
+      "analytics_events": {
+        "description": "Analytics and telemetry events",
+        "indexes": [
+          { "fields": ["brandName", "eventType"], "direction": "asc" },
+          { "fields": ["brandName", "timestamp"], "direction": "desc" },
+          { "fields": ["eventType", "timestamp"], "direction": "desc" }
+        ]
+      },
+      "transactions": {
+        "description": "Financial and operational transactions",
+        "indexes": [
+          { "fields": ["brandName", "type"], "direction": "asc" },
+          { "fields": ["brandName", "createdAt"], "direction": "desc" }
+        ]
+      },
+      "operations_orchestrations": {
+        "description": "Workflow orchestration records",
+        "indexes": [
+          { "fields": ["brandName", "status"], "direction": "asc" },
+          { "fields": ["createdAt"], "direction": "desc" }
+        ]
+      },
+      "operational_metrics": {
+        "description": "System operational metrics",
+        "indexes": [
+          { "fields": ["timestamp"], "direction": "desc" }
+        ]
+      },
+      "cross_brand_events": {
+        "description": "Cross-brand events and audit logs",
+        "indexes": [
+          { "fields": ["eventType", "createdAt"], "direction": "desc" }
+        ]
+      }
+    }
+  },
+
+  "brand_isolation": {
+    "rule": "All brand data is completely isolated",
+    "enforcement": "strict",
+    "verification": {
+      "firestore_rules": "shared/firestore-brand-isolation.rules",
+      "validation_script": "scripts/validate-brand-anchors.js"
+    }
+  },
+
+  "ml_operations": {
+    "frameworks": ["tensorflow", "sklearn", "xgboost"],
+    "model_types": ["classification", "regression", "clustering", "timeseries"],
+    "monitoring": {
+      "drift_detection": true,
+      "performance_tracking": true,
+      "accuracy_threshold": 0.8,
+      "confidence_threshold": 0.7
+    }
+  },
+
+  "data_retention": {
+    "analytics_events": 365,
+    "training_data": 730,
+    "inference_results": 90,
+    "logs": 30
+  },
+
+  "brand_specific_config": {
+    "palettemath": {
+      "domain": "palettemath.net",
+      "api_prefix": "/api/palettemath",
+      "firestoreNamespace": "brands/palettemath",
+      "firebaseTarget": "palettemath",
+      "features": ["color-analysis", "preference-learning"]
+    },
+    "saferide": {
+      "domain": "saferideapp.co.za",
+      "api_prefix": "/api/saferide",
+      "firestoreNamespace": "brands/saferide",
+      "firebaseTarget": "saferide",
+      "features": ["ride-matching", "driver-assignment", "rider-management"],
+      "subdomains": ["driver", "rider", "operations"]
+    },
+    "prevleak": {
+      "domain": "prevleakgroup.co.za",
+      "api_prefix": "/api/prevleak",
+      "firestoreNamespace": "brands/prevleak",
+      "firebaseTarget": "prevleak",
+      "features": ["infrastructure-monitoring", "incident-detection", "predictive-maintenance"]
+    },
+    "qvedic": {
+      "domain": "qvedic.co.za",
+      "api_prefix": "/api/qvedic",
+      "firestoreNamespace": "brands/qvedic",
+      "firebaseTarget": "qvedic",
+      "features": ["content-delivery", "user-engagement"]
+    },
+    "plumber": {
+      "domain": "plumber.co.za",
+      "api_prefix": "/api/plumber",
+      "firestoreNamespace": "brands/plumber",
+      "firebaseTarget": "plumber",
+      "features": ["work-order-dispatch", "field-operations", "offline-sync"]
+    }
+  },
+
+  "deployment": {
+    "functions": {
+      "runtime": "nodejs20",
+      "memory": "512MB",
+      "timeout": "540s",
+      "regions": ["us-central1", "europe-west1"]
+    },
+    "hosting": {
+      "targets": ["palettemath", "saferide", "prevleak", "qvedic", "plumber"],
+      "cdn": true,
+      "cache_control": "public, max-age=3600"
+    }
+  }
+}

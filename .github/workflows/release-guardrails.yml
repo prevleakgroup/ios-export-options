@@ -1,0 +1,25 @@
+name: Release Guardrails
+
+on:
+  push:
+    branches: ["main", "master"]
+  pull_request:
+
+jobs:
+  validate-release-guardrails:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Validate Firebase setup requirements
+        run: node scripts/validate_firebase_setup.js
+
+      - name: Run unified publish guardrails
+        shell: pwsh
+        run: ./scripts/publish_with_guardrails.ps1 -ValidateOnly -SkipExternalDnsChecks

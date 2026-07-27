@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="How to use Palettemath with a protected demo flow, explainer video section, and safe integration guidance."
+    />
+    <title>How To Use Palettemath | Prevleakgroup™</title>
+    <link rel="canonical" href="https://prevleakgroup.co.za/palettemath-how-to-use.html" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="palettemath-page">
+    <header class="page-header" style="background: linear-gradient(135deg, #fffdf4 0%, #fff6cf 100%);">
+      <nav class="nav container">
+        <a class="brand" href="index.html">
+          <img src="assets/palettemath-logo.svg" alt="Palettemath logo" />
+          <span>Palettemath</span>
+        </a>
+        <div class="nav-links">
+          <a href="index.html">Mothership</a>
+          <a href="palettemath.html">Palettemath</a>
+          <a href="about-palettemath.html">About</a>
+          <a href="technical-requirements.html">Technical requirements</a>
+        </div>
+      </nav>
+      <div class="container brand-hero">
+        <div>
+          <p class="eyebrow" style="color: #6a3fd1;">How to use</p>
+          <h1>Palettemath onboarding, protected demo, and integration-safe rollout.</h1>
+          <p>This page explains how users engage with Palettemath while protecting API access, product logic, and IP from exposure.</p>
+        </div>
+        <img src="assets/palettemath-logo.svg" alt="Palettemath mark" />
+      </div>
+    </header>
+
+    <main class="container content">
+      <section class="card-grid">
+        <article class="card">
+          <h2>Step 1: Start from product page</h2>
+          <p>Open the Palettemath product page, review value use cases, then move to the guided demo or app store listing.</p>
+          <div class="stack" style="margin-top: 0.75rem;">
+            <a class="panel" href="palettemath.html">Open Palettemath product page</a>
+            <a class="panel" href="https://play.google.com/store/search?q=PrevLeak%20Group%20Saferide&c=apps" target="_blank" rel="noopener noreferrer">Open Google Play listing</a>
+            <a class="panel" href="https://apps.apple.com/za/" target="_blank" rel="noopener noreferrer">Open Apple App Store listing</a>
+          </div>
+        </article>
+        <article class="card">
+          <h2>Step 2: Watch explainer video</h2>
+          <p>Use this embedded explainer slot to show product flow, outcomes, and practical user actions.</p>
+          <div style="position: relative; width: 100%; padding-top: 56.25%; border-radius: 14px; overflow: hidden; border: 1px solid var(--border); margin-top: 0.75rem;">
+            <iframe
+              src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+              title="Palettemath explainer video"
+              style="position: absolute; inset: 0; width: 100%; height: 100%; border: 0;"
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerpolicy="strict-origin-when-cross-origin"
+              allowfullscreen
+            ></iframe>
+          </div>
+        </article>
+        <article class="card">
+          <h2>Step 3: Try it safely</h2>
+          <p>The sandbox below is client-side only and intentionally avoids live API credentials, internal scoring models, or backend endpoints.</p>
+          <label for="problem-input" style="display:block; font-weight:700; margin-top:0.75rem;">Try-it input</label>
+          <input id="problem-input" type="text" placeholder="Enter a short math prompt" style="width:100%; border:1px solid var(--border); border-radius:10px; padding:0.65rem; margin-top:0.35rem;" />
+          <button id="tryit-run" class="button primary" style="margin-top:0.75rem; border:0;">Run demo</button>
+          <p id="tryit-output" style="margin-top:0.75rem; color: var(--muted);">Demo output will appear here.</p>
+        </article>
+      </section>
+
+      <section class="card-grid" style="margin-top: 1rem;">
+        <article class="card">
+          <h2>API and IP protection controls</h2>
+          <ul>
+            <li>Never expose API keys in frontend HTML, JavaScript, or docs.</li>
+            <li>Use server-side proxy endpoints for all protected model calls.</li>
+            <li>Apply token scoping, request signing, and per-tenant rate limits.</li>
+            <li>Disable verbose stack traces and internal model metadata in public responses.</li>
+            <li>Log abnormal scraping patterns and auto-block abusive clients.</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h2>How-to-use quick links</h2>
+          <div class="stack">
+            <a class="panel" href="about-palettemath.html">About Palettemath</a>
+            <a class="panel" href="technical-requirements.html">Technical and publishing references</a>
+            <a class="panel" href="app-links.html">App links and social marketing</a>
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <script>
+      (function () {
+        const input = document.getElementById('problem-input');
+        const output = document.getElementById('tryit-output');
+        const run = document.getElementById('tryit-run');
+
+        run.addEventListener('click', function () {
+          const text = (input.value || '').trim();
+          if (!text) {
+            output.textContent = 'Enter a prompt first, then run demo.';
+            return;
+          }
+
+          const complexity = Math.min(5, Math.max(1, Math.ceil(text.length / 12)));
+          output.textContent = 'Demo complete: prompt received, estimated complexity level ' + complexity + '/5, recommendation: continue in full app for secure evaluated results.';
+        });
+      })();
+    </script>
+  </body>
+</html>

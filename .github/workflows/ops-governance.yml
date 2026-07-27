@@ -1,0 +1,25 @@
+name: Ops Governance
+
+on:
+  push:
+    branches: ["main", "master"]
+  pull_request:
+    branches: ["*"]
+
+jobs:
+  validate-ops-contracts:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Validate data structure and ML governance
+        run: node scripts/validate_operational_contracts.js
+
+      - name: Validate deployment trees
+        run: node scripts/validate_deployment_trees.js

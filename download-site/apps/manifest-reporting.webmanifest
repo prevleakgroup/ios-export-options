@@ -1,0 +1,18 @@
+{
+  "name": "Saferide Public Reporting App",
+  "short_name": "Saferide",
+  "description": "Public issue reporting web app for intake, routing, and status visibility.",
+  "start_url": "/apps/public-reporting-app.html",
+  "scope": "/apps/",
+  "display": "standalone",
+  "background_color": "#f4f7fb",
+  "theme_color": "#ffffff",
+  "icons": [
+    {
+      "src": "/assets/saferide-logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

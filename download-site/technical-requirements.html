@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Technical and publishing requirements for Prevleakgroup™ web and app channels, including Google web publishing and mobile app reference URLs."
+    />
+    <title>Technical requirements | Qvedic</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="page-header">
+      <nav class="nav container">
+        <a class="brand" href="index.html">
+          <img src="assets/qvedic-logo.svg" alt="Qvedic logo" />
+          <span>Qvedic</span>
+        </a>
+        <div class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="palettemath.html">Palettemath</a>
+          <a href="rider/index.html">Rider</a>
+          <a href="driver/index.html">Driver</a>
+        </div>
+      </nav>
+      <div class="container page-intro">
+        <p class="eyebrow">Technical requirements</p>
+        <h1>Implementation guidance for the portal ecosystem.</h1>
+        <p>This page outlines the practical requirements for the shared web experience, app entry points, documentation flow, and integration-ready presentation.</p>
+      </div>
+    </header>
+
+    <main class="container content">
+      <section class="card">
+        <h2>Core requirements</h2>
+        <p>The portal system should remain simple, clear, and operationally useful. The structure supports product pages, documentation access, app downloads, and a consistent handoff to wider business systems.</p>
+      </section>
+
+      <section class="info-grid">
+        <article class="info-card">
+          <h3>Brand and content</h3>
+          <ul>
+            <li>Use approved logo artwork and palette references.</li>
+            <li>Keep the visual language calm, professional, and credible.</li>
+            <li>Use a restrained number of calls to action and explain each one clearly.</li>
+          </ul>
+        </article>
+        <article class="info-card">
+          <h3>Portal and integration</h3>
+          <ul>
+            <li>Support app download entry points for Android and iOS.</li>
+            <li>Maintain product documentation and resources as a regular section.</li>
+            <li>Provide links to operational support, product resources, or implementation contact points.</li>
+          </ul>
+        </article>
+      </section>
+
+      <section class="card-grid" style="margin-top: 1rem;">
+        <article class="card">
+          <h2>Google web publishing references</h2>
+          <ul>
+            <li>Primary web URL: <a href="https://prevleakgroup.co.za/">https://prevleakgroup.co.za/</a></li>
+            <li>Rider page: <a href="https://saferideapp.co.za/">https://saferideapp.co.za/</a></li>
+            <li>Driver page: <a href="https://saferidesapp.co.za/">https://saferidesapp.co.za/</a></li>
+            <li>Palettemath page: <a href="https://palettemath.net/">https://palettemath.net/</a></li>
+          </ul>
+        </article>
+        <article class="card">
+          <h2>Google and app channel references</h2>
+          <ul>
+            <li>Google Play app address: <a href="https://play.google.com/store/search?q=PrevLeak%20Group%20Saferide&c=apps" target="_blank" rel="noopener noreferrer">https://play.google.com/store/search?q=PrevLeak%20Group%20Saferide&c=apps</a></li>
+            <li>Apple App Store address: <a href="https://apps.apple.com/za/" target="_blank" rel="noopener noreferrer">https://apps.apple.com/za/</a></li>
+            <li>Google Play listing status: published via store address</li>
+            <li>iOS listing status: published via store address</li>
+          </ul>
+        </article>
+      </section>
+
+      <section class="card-grid" style="margin-top: 1rem;">
+        <article class="card">
+          <h2>Website reference registry</h2>
+          <ul>
+            <li>Main website: <a href="https://prevleakgroup.co.za/">https://prevleakgroup.co.za/</a></li>
+            <li>Management website: <a href="https://saferiderapp.co.za/">https://saferiderapp.co.za/</a></li>
+            <li>Rider website: <a href="https://saferideapp.co.za/">https://saferideapp.co.za/</a></li>
+            <li>Driver website: <a href="https://saferidesapp.co.za/">https://saferidesapp.co.za/</a></li>
+            <li>Palettemath website: <a href="https://palettemath.net/">https://palettemath.net/</a></li>
+          </ul>
+        </article>
+        <article class="card">
+          <h2>App and operations references</h2>
+          <ul>
+            <li>Plumber web app: <a href="https://prevleakgroup.co.za/apps/plumber-app.html">https://prevleakgroup.co.za/apps/plumber-app.html</a></li>
+            <li>Public reporting web app: <a href="https://prevleakgroup.co.za/apps/public-reporting-app.html">https://prevleakgroup.co.za/apps/public-reporting-app.html</a></li>
+            <li>Customer hub: <a href="https://prevleakgroup.co.za/customer-hub.html">https://prevleakgroup.co.za/customer-hub.html</a></li>
+            <li>Machine-readable reference file: <a href="https://prevleakgroup.co.za/references.json">https://prevleakgroup.co.za/references.json</a></li>
+            <li>Publishing rule: front-facing domain links and store addresses only.</li>
+          </ul>
+        </article>
+      </section>
+
+      <section class="card-grid" style="margin-top: 1rem;">
+        <article class="card">
+          <h2>Palettemath API protection controls</h2>
+          <ul>
+            <li>Never publish API keys or secrets in HTML, JavaScript, or public docs.</li>
+            <li>Route protected calls through server-side endpoints only.</li>
+            <li>Use scoped tokens, rate limiting, and request origin checks.</li>
+            <li>Return minimal public responses and hide internal model metadata.</li>
+            <li>Monitor scraping and block suspicious automation patterns.</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h2>Palettemath how-to and demo</h2>
+          <ul>
+            <li>How to use page: <a href="palettemath-how-to-use.html">palettemath-how-to-use.html</a></li>
+            <li>Explainer video section included for onboarding context.</li>
+            <li>Try It feature is a safe demo that does not expose backend APIs.</li>
+          </ul>
+        </article>
+      </section>
+
+      <section class="card" style="margin-top: 1rem;">
+        <h2>Saferide petrol surge formula standard</h2>
+        <p><strong>Formula:</strong> Surge adjustment = Base fare x [1 + ((Current petrol price - Baseline petrol price) / Baseline petrol price) x Sensitivity factor]</p>
+        <ul>
+          <li>Base fare: standard fare before surge support.</li>
+          <li>Baseline petrol price: approved reference price per update cycle.</li>
+          <li>Current petrol price: latest validated fuel price in market.</li>
+          <li>Sensitivity factor: policy coefficient set by operations.</li>
+        </ul>
+        <p>Set a minimum floor at 1.00x and a maximum cap according to policy to keep rider fairness and driver sustainability balanced.</p>
+      </section>
+
+      <section class="card" style="margin-top: 1rem;">
+        <h2>Temperature-compensated methane estimation</h2>
+        <p><strong>Formula:</strong> Adjusted methane index = Raw methane sensor reading x [1 + Temperature coefficient x (Current temperature - Reference temperature)]</p>
+        <ul>
+          <li>Raw methane sensor reading: calibrated baseline signal from the methane sensor.</li>
+          <li>Temperature coefficient: sensor-specific compensation factor derived from calibration.</li>
+          <li>Reference temperature: the calibration temperature used as the baseline.</li>
+          <li>Current temperature: the live ambient or enclosure temperature at the sensor.</li>
+        </ul>
+        <p>This is a temperature-compensated estimate, not a direct measurement from temperature alone. Use it with the methane sensor, calibration data, and validation rules.</p>
+      </section>
+
+      <section class="card" style="margin-top: 1rem;">
+        <h2>Municipal ML innovation paths</h2>
+        <ul>
+          <li>Predict water usage by combining historical consumption, weather, leakage signals, and zone activity.</li>
+          <li>Optimize logistics routes by learning crew demand, incident density, and time-window constraints.</li>
+          <li>Reduce petrol spend by selecting lower-distance, higher-success routing plans for crews and support vehicles.</li>
+          <li>Use the same shared intelligence layer for incident priority, dispatch ETA, surge support, and resource forecasting.</li>
+        </ul>
+      </section>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,38 @@
+{
+  "id": "integration-source-firebase-cloudshell",
+  "sourceOfTruth": {
+    "githubRemote": "https://github.com/prevleakgroup/PrevLeak-Group.git",
+    "branch": "master"
+  },
+  "firebase": {
+    "projectId": "saferide-peld8",
+    "hostingPublicDir": "download-site",
+    "primaryHostingUrl": "https://saferide-peld8.web.app"
+  },
+  "cloudShell": {
+    "required": true,
+    "script": "cloud-shell-publish.sh",
+    "verificationChecks": [
+      "forwarding-dns-validation",
+      "link-integrity-validation",
+      "operational-contract-validation"
+    ]
+  },
+  "operators": {
+    "ocdc": {
+      "script": "scripts/oc-dc-operator.ps1",
+      "order": 1,
+      "scope": "github-source-and-guardrails"
+    },
+    "pcdc": {
+      "script": "scripts/pc-dc-operator.ps1",
+      "order": 2,
+      "scope": "firebase-project-and-hosting-guardrails"
+    }
+  },
+  "privacyControls": {
+    "dnsAndStoreManifestsAreIsolated": true,
+    "noCrossTargetPublishing": true,
+    "noSecretMaterialInPublicPages": true
+  }
+}

@@ -1,0 +1,25 @@
+Use the real logo artwork from the Google Drive account of thulaniprevleak@gmail.com and the business Google account as the only approved base for branding.
+
+Do not use generic stock-style logos, cartoon-like visuals, or low-quality AI-looking design treatments.
+
+Use the supplied logos as the foundation and create one professional, repeatable website template system for all sites and apps.
+
+Apply the same template across all websites:
+- Main corporate site
+- Palettemath
+- Rider portal
+- Driver portal
+
+Apply the same template across all app entry points:
+- Android app
+- iOS app
+
+The only special design treatment is for Palettemath: make it a realistic cubic-style presentation, as requested before.
+
+Use the Qvedic logo and the other real brand logos as the visual base, with matching color schemes and layout structure.
+
+Do not design new logos or create new brand identities. Only apply the existing real logos to ready-to-use website templates and app presentation layouts.
+
+Also attach all relevant content and collect all available Google Drive files for each product to be used for website pages and marketing materials.
+
+Store all generated files in both the local archive and Google Drive.
