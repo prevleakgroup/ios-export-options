@@ -3,6 +3,7 @@
   "type": "appstore",
   "store": "apple-app-store",
   "sourcePath": "download-site",
+  "publishTarget": "https://apps.apple.com/za/",
   "listingUrl": "https://apps.apple.com/za/",
   "publishScope": "public-listing-only",
   "privacyControls": {
