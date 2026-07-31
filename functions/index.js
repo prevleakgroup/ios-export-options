@@ -3,7 +3,13 @@ const express = require('express');
 const cors = require('cors');
 const admin = require('firebase-admin');
 const { onRequest } = require('firebase-functions/v2/https');
+const functions = require('firebase-functions');
 
+// initializeApp() must be called before any admin SDK usage.
+// Calling getDatabase() (or any component accessor) before this line throws:
+//   TypeError: Cannot read properties of undefined (reading 'getProvider')
+// The fix is always to ensure initializeApp() runs first and, when using
+// Realtime Database, to pass the databaseURL in the config object.
 admin.initializeApp();
 const db = admin.firestore();
 
@@ -180,6 +186,7 @@ async function provisionVerifiedProfile(req, res) {
 }
 
 app.get('/health', (req, res) => {
+  res.set('Cache-Control', 'public, max-age=300, s-maxage=600');
   const region = process.env.FUNCTION_REGION || process.env.GCLOUD_REGION || 'unknown';
   res.status(200).json({
     ok: true,
@@ -411,3 +418,74 @@ Object.assign(exports, {
   getDeploymentManifest: coordExports.getDeploymentManifest,
   healthCheck: coordExports.healthCheck
 });
+
+// ============================================================================
+// PUSH NOTIFICATIONS — follower events via Realtime Database trigger
+// ============================================================================
+
+/**
+ * Read FCM device tokens stored on a user's Firestore profile.
+ * Tokens are written by the client after calling getToken(messaging).
+ * @param {string} userUID
+ * @returns {Promise<string[]>}
+ */
+async function getUserDeviceTokens(userUID) {
+  const snapshot = await db.collection('profiles').doc(userUID).get();
+  if (!snapshot.exists) return [];
+  return snapshot.data().fcmTokens || [];
+}
+
+/**
+ * Read a user's display name from their Firestore profile.
+ * @param {string} followerUID
+ * @returns {Promise<string>}
+ */
+async function getUserDisplayName(followerUID) {
+  const snapshot = await db.collection('profiles').doc(followerUID).get();
+  if (!snapshot.exists) return 'Someone';
+  return snapshot.data().displayName || 'Someone';
+}
+
+/**
+ * Send a push notification when a user gains a new follower.
+ * Triggered by a write to /followers/{userUID}/{followerUID} in Realtime Database.
+ * Invalid tokens are automatically pruned from the Firestore profile.
+ */
+exports.sendNotification = functions.database
+  .ref('/followers/{userUID}/{followerUID}')
+  .onWrite(async (change, context) => {
+    // Only act on creation events, not deletions.
+    if (!change.after.exists()) return null;
+
+    const { userUID, followerUID } = context.params;
+
+    const [tokens, name] = await Promise.all([
+      getUserDeviceTokens(userUID),
+      getUserDisplayName(followerUID)
+    ]);
+
+    if (tokens.length === 0) return null;
+
+    const payload = {
+      notification: {
+        title: 'You have a new follower!',
+        body: `${name} is now following you.`
+      },
+      tokens
+    };
+
+    const response = await admin.messaging().sendEachForMulticast(payload);
+
+    // Remove any tokens that are no longer valid.
+    const staleTokens = response.responses
+      .map((r, i) => (!r.success ? tokens[i] : null))
+      .filter(Boolean);
+
+    if (staleTokens.length > 0) {
+      await db.collection('profiles').doc(userUID).update({
+        fcmTokens: admin.firestore.FieldValue.arrayRemove(...staleTokens)
+      });
+    }
+
+    return response;
+  });
