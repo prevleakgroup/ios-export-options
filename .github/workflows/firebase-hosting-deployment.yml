@@ -67,7 +67,7 @@ jobs:
           cp -r "${{ env.DEPLOYMENT_DIR }}"/* build/ || true
           
           # Generate deployment manifest
-          cat > build/deployment-info.json << 'EOF'
+          cat > build/deployment-info.json << EOF
           {
             "firebase_project": "${{ env.FIREBASE_PROJECT }}",
             "deployed_at": "$(date -u +'%Y-%m-%dT%H:%M:%SZ')",
