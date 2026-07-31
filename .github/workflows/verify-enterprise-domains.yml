@@ -32,13 +32,27 @@ jobs:
 
           for record in "${records[@]}"; do
             IFS='|' read -r domain name value <<< "$record"
-            echo "Updating TXT ${name}.${domain}"
+            echo "Checking TXT ${name}.${domain}"
+
+            existing="$(curl --fail-with-body --silent --show-error \
+              --get \
+              --header "Authorization: Bearer ${GODADDY_PAT}" \
+              --data-urlencode 'type=TXT' \
+              --data-urlencode "name=${name}" \
+              "https://api.godaddy.com/v3/domains/zones/${domain}/dns-records")"
+
+            if jq --exit-status --arg value "$value" '.items[]? | select(.data == $value)' <<< "$existing" > /dev/null; then
+              echo "TXT ${name}.${domain} already exists"
+              continue
+            fi
+
+            echo "Creating TXT ${name}.${domain}"
             curl --fail-with-body --silent --show-error \
-              --request PUT \
+              --request POST \
               --header "Authorization: Bearer ${GODADDY_PAT}" \
               --header 'Content-Type: application/json' \
-              --data "[{\"data\":\"${value}\",\"ttl\":600}]" \
-              "https://api.godaddy.com/v1/domains/${domain}/records/TXT/${name}"
+              --data "{\"name\":\"${name}\",\"type\":\"TXT\",\"data\":\"${value}\",\"ttl\":600}" \
+              "https://api.godaddy.com/v3/domains/zones/${domain}/dns-records"
           done
 
       - name: Check authoritative DNS
