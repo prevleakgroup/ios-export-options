@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Sign in to Prevleakgroup™ services." />
+    <title>Sign In | Prevleakgroup™</title>
+    <link rel="canonical" href="https://prevleakgroup.co.za/login.html" />
+    <link rel="icon" href="assets/prevleak-logo.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="styles.css" />
+
+    <!-- FirebaseUI CSS -->
+    <link
+      rel="stylesheet"
+      href="https://www.gstatic.com/firebasejs/ui/6.1.0/firebase-ui-auth.css"
+    />
+
+    <style>
+      .login-wrapper {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: var(--bg);
+        padding: 2rem 1rem;
+      }
+
+      .login-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 2.5rem 2rem;
+        width: 100%;
+        max-width: 420px;
+        text-align: center;
+      }
+
+      .login-card .brand {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.6rem;
+        margin-bottom: 1.5rem;
+        text-decoration: none;
+        color: var(--text);
+      }
+
+      .login-card .brand img {
+        width: var(--logo-nav-size);
+        height: var(--logo-nav-size);
+      }
+
+      .login-card .brand span {
+        font-size: 1.15rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+      }
+
+      .login-card h1 {
+        font-size: 1.35rem;
+        font-weight: 700;
+        margin: 0 0 0.4rem;
+        color: var(--text);
+      }
+
+      .login-card .subtitle {
+        font-size: 0.9rem;
+        color: var(--muted);
+        margin: 0 0 1.5rem;
+      }
+
+      #firebaseui-auth-container {
+        margin-top: 1rem;
+      }
+
+      .login-footer {
+        margin-top: 2rem;
+        font-size: 0.8rem;
+        color: var(--muted);
+      }
+
+      .login-footer a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="login-wrapper">
+      <div class="login-card">
+        <a class="brand" href="index.html">
+          <img src="assets/prevleak-logo.svg" alt="Prevleakgroup logo" />
+          <span>Prevleakgroup™</span>
+        </a>
+
+        <h1>Sign in</h1>
+        <p class="subtitle">Use your Google account or email to continue.</p>
+
+        <!-- FirebaseUI mounts here -->
+        <div id="firebaseui-auth-container"></div>
+
+        <p class="login-footer">
+          By signing in you agree to our
+          <a href="https://prevleakgroup.co.za/docs/privacy.html">Privacy Policy</a>.
+        </p>
+      </div>
+    </div>
+
+    <!-- Firebase App (compat) — required by FirebaseUI -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+    <!-- FirebaseUI -->
+    <script src="https://www.gstatic.com/firebasejs/ui/6.1.0/firebase-ui-auth.js"></script>
+
+    <script>
+      // ---------------------------------------------------------------------------
+      // Firebase app initialisation
+      // Replace the placeholder values below with your project's config object
+      // from Firebase Console → Project Settings → Your apps → SDK setup.
+      // ---------------------------------------------------------------------------
+      var firebaseConfig = {
+        apiKey: "REPLACE_API_KEY",
+        authDomain: "saferide-peld8.firebaseapp.com",
+        projectId: "saferide-peld8",
+        storageBucket: "saferide-peld8.appspot.com",
+        messagingSenderId: "REPLACE_SENDER_ID",
+        appId: "REPLACE_APP_ID",
+        databaseURL: "https://saferide-peld8-default-rtdb.firebaseio.com"
+      };
+
+      firebase.initializeApp(firebaseConfig);
+
+      // ---------------------------------------------------------------------------
+      // Auth state observer — redirect already-signed-in users immediately.
+      // ---------------------------------------------------------------------------
+      firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+          // User is signed in — redirect to the success URL.
+          window.location.href = 'https://g.dev/Thulanikhumalo';
+        } else {
+          // User is signed out — show the sign-in widget.
+          ui.start('#firebaseui-auth-container', uiConfig);
+        }
+      });
+
+      // ---------------------------------------------------------------------------
+      // Firestore offline persistence
+      // ---------------------------------------------------------------------------
+      firebase.firestore().enablePersistence().catch(function(err) {
+        if (err.code === 'failed-precondition') {
+          // Multiple tabs open — only one can enable persistence at a time.
+          console.warn('Firestore persistence unavailable: multiple tabs open.');
+        } else if (err.code === 'unimplemented') {
+          console.warn('Firestore persistence is not supported in this browser.');
+        }
+      });
+
+      // ---------------------------------------------------------------------------
+      // FirebaseUI configuration
+      // Two sign-in options are offered:
+      //   1. Google (with One-tap / YOLO credential helper)
+      //   2. Email / password
+      // On success the user is redirected to https://g.dev/Thulanikhumalo
+      // ---------------------------------------------------------------------------
+      var uiConfig = {
+        signInSuccessUrl: 'https://g.dev/Thulanikhumalo',
+        credentialHelper: firebaseui.auth.CredentialHelper.GOOGLE_YOLO,
+        signInOptions: [
+          {
+            provider: firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+            authMethod: 'https://accounts.google.com',
+            clientId: 'REPLACE_GOOGLE_CLIENT_ID'
+          },
+          firebase.auth.EmailAuthProvider.PROVIDER_ID
+        ]
+      };
+
+      // ui.start() is called inside onAuthStateChanged so it only mounts
+      // when the user is confirmed to be signed out.
+      var ui = new firebaseui.auth.AuthUI(firebase.auth());
+    </script>
+  </body>
+</html>

@@ -1,5 +1,5 @@
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-$repoRoot = Split-Path -Parent $scriptDir
+$repoRoot = $scriptDir
 $destDir = Join-Path $env:USERPROFILE "Downloads\assessment-build-artifacts"
 
 New-Item -ItemType Directory -Force -Path $destDir | Out-Null

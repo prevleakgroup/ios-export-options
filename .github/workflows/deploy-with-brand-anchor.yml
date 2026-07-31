@@ -38,8 +38,9 @@ jobs:
         run: node scripts/validate-brand-anchors.js
 
       - name: Validate Firebase configuration
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
         run: |
-          firebase login:ci --token ${{ secrets.FIREBASE_TOKEN }}
           firebase projects:list --json | grep saferide-peld8
 
       - name: Check DNS configuration
@@ -80,7 +81,7 @@ jobs:
           mkdir -p build/palettemath build/saferide build/prevleak build/qvedic build/plumber
 
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: build-artifacts
           path: build/
@@ -127,7 +128,7 @@ jobs:
           service_account_key: ${{ secrets.GCP_SA_KEY }}
 
       - name: Download build artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: build-artifacts
           path: build/
@@ -159,7 +160,7 @@ jobs:
           service_account_key: ${{ secrets.GCP_SA_KEY }}
 
       - name: Download build artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: build-artifacts
           path: build/
@@ -270,7 +271,7 @@ jobs:
           EOF
 
       - name: Upload deployment report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: deployment-report
           path: deployment-report.txt

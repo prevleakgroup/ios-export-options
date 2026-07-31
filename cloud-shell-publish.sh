@@ -46,8 +46,7 @@ gcloud iam workload-identity-pools providers create-oidc "$WORKLOAD_PROVIDER" \
    --location="global" \
    --workload-identity-pool="$WORKLOAD_POOL" \
    --issuer-uri="https://token.actions.githubusercontent.com" \
-   --attribute-mapping="google.subject=assertion.sub,attribute.repository=assertion.repository,attribute.repository_owner=assertion.repository_owner" \
-   --allowed-audiences="https://iam.googleapis.com/${PROJECT_ID}"
+   --attribute-mapping="google.subject=assertion.sub,attribute.repository=assertion.repository,attribute.repository_owner=assertion.repository_owner"
 
 # 5) Bind GitHub repo to service account
  gcloud iam service-accounts add-iam-policy-binding \
