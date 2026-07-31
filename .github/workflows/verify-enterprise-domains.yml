@@ -10,14 +10,12 @@ jobs:
   update-dns:
     runs-on: ubuntu-latest
     env:
-      GODADDY_API_KEY: ${{ secrets.GODADDY_API_KEY }}
-      GODADDY_API_SECRET: ${{ secrets.GODADDY_API_SECRET }}
+      GODADDY_PAT: ${{ secrets.GODADDY_PAT }}
     steps:
       - name: Validate credentials
         shell: bash
         run: |
-          test -n "$GODADDY_API_KEY"
-          test -n "$GODADDY_API_SECRET"
+          test -n "$GODADDY_PAT"
 
       - name: Add GitHub Enterprise TXT records
         shell: bash
@@ -37,7 +35,7 @@ jobs:
             echo "Updating TXT ${name}.${domain}"
             curl --fail-with-body --silent --show-error \
               --request PUT \
-              --header "Authorization: sso-key ${GODADDY_API_KEY}:${GODADDY_API_SECRET}" \
+              --header "Authorization: Bearer ${GODADDY_PAT}" \
               --header 'Content-Type: application/json' \
               --data "[{\"data\":\"${value}\",\"ttl\":600}]" \
               "https://api.godaddy.com/v1/domains/${domain}/records/TXT/${name}"
