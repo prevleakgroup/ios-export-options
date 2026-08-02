@@ -137,10 +137,9 @@ jobs:
           echo "Deployment source: ${{ env.DEPLOYMENT_DIR }}"
           echo ""
           
-          # Deploy to Firebase
+          # Deploy all hosting targets defined in firebase.json
           firebase deploy \
             --project ${{ env.FIREBASE_PROJECT }} \
-            --public build \
             --only hosting \
             --token "$FIREBASE_TOKEN"
           

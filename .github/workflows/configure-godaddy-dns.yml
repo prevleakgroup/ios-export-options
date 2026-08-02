@@ -22,12 +22,10 @@ jobs:
         run: |
           set -euo pipefail
 
-          # GitHub Pages IP addresses
-          GITHUB_PAGES_IPS=(
-            185.199.108.153
-            185.199.109.153
-            185.199.110.153
-            185.199.111.153
+          # Firebase Hosting IPs
+          FIREBASE_IPS=(
+            151.101.1.195
+            151.101.65.195
           )
 
           DOMAINS=(
@@ -42,8 +40,8 @@ jobs:
           for domain in "${DOMAINS[@]}"; do
             echo "=== $domain ==="
 
-            # Upsert each GitHub Pages A record
-            for ip in "${GITHUB_PAGES_IPS[@]}"; do
+            # Upsert each Firebase Hosting A record
+            for ip in "${FIREBASE_IPS[@]}"; do
               echo "Checking A @ → $ip for $domain"
 
               existing="$(curl --fail-with-body --silent --show-error \
@@ -68,8 +66,8 @@ jobs:
               fi
             done
 
-            # Upsert www CNAME
-            echo "Checking CNAME www → prevleakgroup.github.io for $domain"
+            # Upsert www CNAME → Firebase project domain
+            echo "Checking CNAME www → saferide-peld8.web.app for $domain"
 
             existing="$(curl --fail-with-body --silent --show-error \
               --get \
@@ -79,15 +77,15 @@ jobs:
               "${BASE_URL}/${domain}/dns-records")"
 
             if echo "$existing" | jq --exit-status \
-                '.items[]? | select(.data == "prevleakgroup.github.io")' > /dev/null 2>&1; then
-              echo "  ✓ CNAME www → prevleakgroup.github.io already exists"
+                '.items[]? | select(.data == "saferide-peld8.web.app")' > /dev/null 2>&1; then
+              echo "  ✓ CNAME www → saferide-peld8.web.app already exists"
             else
-              echo "  + Creating CNAME www → prevleakgroup.github.io"
+              echo "  + Creating CNAME www → saferide-peld8.web.app"
               curl --fail-with-body --silent --show-error \
                 --request POST \
                 --header "Authorization: $GODADDY_PAT" \
                 --header 'Content-Type: application/json' \
-                --data '{"name":"www","type":"CNAME","data":"prevleakgroup.github.io","ttl":3600}' \
+                --data '{"name":"www","type":"CNAME","data":"saferide-peld8.web.app","ttl":3600}' \
                 "${BASE_URL}/${domain}/dns-records"
               echo "  ✓ Created"
             fi
@@ -123,15 +121,16 @@ jobs:
         shell: bash
         run: |
           cat >> "$GITHUB_STEP_SUMMARY" << 'EOF'
-          ## Configure GoDaddy DNS
+          ## Configure GoDaddy DNS (Firebase Hosting)
 
           | Domain | Records |
           |--------|---------|
-          | prevleak.company | 4× A (GitHub Pages) + CNAME www |
-          | saferide.company | 4× A (GitHub Pages) + CNAME www |
-          | palettemath.company | 4× A (GitHub Pages) + CNAME www |
-          | qvedic.company | 4× A (GitHub Pages) + CNAME www |
+          | prevleak.company | 2× A (Firebase Hosting) + CNAME www → saferide-peld8.web.app |
+          | saferide.company | 2× A (Firebase Hosting) + CNAME www → saferide-peld8.web.app |
+          | palettemath.company | 2× A (Firebase Hosting) + CNAME www → saferide-peld8.web.app |
+          | qvedic.company | 2× A (Firebase Hosting) + CNAME www → saferide-peld8.web.app |
 
-          **Next step:** Add each domain as a custom domain in GitHub Pages settings,
-          then wait up to 24 hours for HTTPS certificates to be issued.
+          **Next step:** In the Firebase Console, add each domain as a custom domain under
+          Hosting → Custom domains. Firebase will verify ownership via the A records and
+          auto-issue HTTPS certificates (~5–30 minutes after DNS propagation).
           EOF

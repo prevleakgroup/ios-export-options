@@ -7,7 +7,6 @@ on:
 
 env:
   FIREBASE_PROJECT: saferide-peld8
-  FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
 
 jobs:
   validate-and-build:
@@ -60,7 +59,6 @@ jobs:
     name: Deploy ${{ matrix.brand }} hosting
     needs: validate-and-build
     runs-on: ubuntu-latest
-    if: ${{ secrets.FIREBASE_TOKEN != '' }}
     strategy:
       matrix:
         brand: [prevleak, saferide, palettemath, qvedic]
@@ -82,7 +80,7 @@ jobs:
           firebase deploy \
             --only hosting:${{ matrix.brand }} \
             --project saferide-peld8 \
-            --debug
+            --token "$FIREBASE_TOKEN"
 
       - name: Verify deployment
         run: |
