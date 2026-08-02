@@ -15,12 +15,11 @@
     "firebase-admin": "^12.5.0",
     "firebase-functions": "^5.1.1",
     "@genkit-ai/ai": "^1.40.1",
-    "@genkit-ai/flow": "^1.40.1",
+    "genkit": "^1.40.1",
     "@genkit-ai/vertexai": "^1.40.1",
-    "@google-cloud/aiplatform": "^2.7.0",
-    "@google-cloud/secret-manager": "^4.4.0",
+    "@google-cloud/aiplatform": "^2.6.0",
+    "@google-cloud/secret-manager": "^4.2.0",
     "axios": "^1.6.0",
-    "crypto": "^1.0.1",
-    "uuid": "^4.0.0"
+    "uuid": "^9.0.0"
   }
 }

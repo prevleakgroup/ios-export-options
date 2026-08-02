@@ -4,7 +4,7 @@
  * Integrates with Firebase Cloud Functions
  */
 
-import { defineFlow, defineAction } from '@genkit-ai/flow';
+import { defineFlow, defineAction } from 'genkit';
 import { vertex } from '@genkit-ai/vertexai';
 
 // ============================================================================
