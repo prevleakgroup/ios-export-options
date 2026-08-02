@@ -38,6 +38,14 @@ jobs:
             fi
           done
           
+          # validate main site
+          if [ -f "download-site/index.html" ]; then
+            echo "✓ prevleakgroup main site: Valid"
+          else
+            echo "✗ prevleakgroup main site: Missing index.html"
+            exit 1
+          fi
+          
           echo "All brands validated ✓"
 
       - name: Validate Firebase configuration
@@ -48,10 +56,10 @@ jobs:
           targets=$(grep '"target"' firebase.json | wc -l)
           echo "Found $targets hosting targets"
           
-          if [ "$targets" -eq 4 ]; then
-            echo "✓ All 4 brand targets configured"
+          if [ "$targets" -ge 4 ]; then
+            echo "✓ Hosting targets configured"
           else
-            echo "✗ Expected 4 targets, found $targets"
+            echo "✗ Expected at least 4 targets, found $targets"
             exit 1
           fi
 
@@ -61,7 +69,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        brand: [prevleak, saferide, palettemath, qvedic]
+        brand: [prevleakgroup, prevleak, saferide, palettemath, qvedic]
       max-parallel: 2
       fail-fast: false
     steps:
@@ -101,24 +109,27 @@ jobs:
           ║               Multi-Domain Deployment Complete                 ║
           ╚════════════════════════════════════════════════════════════════╝
           
-          Deployed Brands:
-          ✓ PrevLeak    → https://prevleak-peld8.web.app
+          Deployed Sites:
+          ✓ PrevLeak Group  → https://prevleakgroup-peld8.web.app
+            Domain: prevleakgroup.co.za
+          
+          ✓ PrevLeak        → https://prevleak-peld8.web.app
             Domain: prevleak.company
           
-          ✓ Saferide    → https://saferide-peld8.web.app
+          ✓ Saferide        → https://saferide-peld8.web.app
             Domain: saferide.company
           
-          ✓ Palettemath → https://palettemath-peld8.web.app
-            Domain: palettemath.company
+          ✓ Palettemath     → https://palettemath-peld8.web.app
+            Domain: palettemath.net
           
-          ✓ Qvedic      → https://qvedic-peld8.web.app
+          ✓ Qvedic          → https://qvedic-peld8.web.app
             Domain: qvedic.company
           
           NEXT STEPS:
-          1. Add each domain to Firebase Console under Hosting → Custom domains
-          2. Configure DNS records in GoDaddy for each domain
+          1. In Firebase Console, add each custom domain under Hosting → Custom domains
+          2. Copy the DNS records Firebase provides into GoDaddy for each domain
           3. Wait for DNS verification (5-30 minutes)
-          4. HTTPS certificates will auto-generate after DNS verification
+          4. HTTPS certificates auto-generate after DNS verification
           
           Learn more: https://firebase.google.com/docs/hosting/custom-domain
           

@@ -29,9 +29,10 @@ jobs:
           )
 
           DOMAINS=(
+            prevleakgroup.co.za
             prevleak.company
             saferide.company
-            palettemath.company
+            palettemath.net
             qvedic.company
           )
 
@@ -39,6 +40,16 @@ jobs:
 
           for domain in "${DOMAINS[@]}"; do
             echo "=== $domain ==="
+
+            # Derive Firebase site name from domain
+            case "$domain" in
+              prevleakgroup.co.za)  firebase_site="prevleakgroup-peld8.web.app" ;;
+              prevleak.company)     firebase_site="prevleak-peld8.web.app" ;;
+              saferide.company)     firebase_site="saferide-peld8.web.app" ;;
+              palettemath.net)      firebase_site="palettemath-peld8.web.app" ;;
+              qvedic.company)       firebase_site="qvedic-peld8.web.app" ;;
+              *)                    firebase_site="saferide-peld8.web.app" ;;
+            esac
 
             # Upsert each Firebase Hosting A record
             for ip in "${FIREBASE_IPS[@]}"; do
@@ -66,8 +77,8 @@ jobs:
               fi
             done
 
-            # Upsert www CNAME → Firebase project domain
-            echo "Checking CNAME www → saferide-peld8.web.app for $domain"
+            # Upsert www CNAME → per-domain Firebase site
+            echo "Checking CNAME www → $firebase_site for $domain"
 
             existing="$(curl --fail-with-body --silent --show-error \
               --get \
@@ -77,15 +88,16 @@ jobs:
               "${BASE_URL}/${domain}/dns-records")"
 
             if echo "$existing" | jq --exit-status \
-                '.items[]? | select(.data == "saferide-peld8.web.app")' > /dev/null 2>&1; then
-              echo "  ✓ CNAME www → saferide-peld8.web.app already exists"
+                --arg site "$firebase_site" \
+                '.items[]? | select(.data == $site)' > /dev/null 2>&1; then
+              echo "  ✓ CNAME www → $firebase_site already exists"
             else
-              echo "  + Creating CNAME www → saferide-peld8.web.app"
+              echo "  + Creating CNAME www → $firebase_site"
               curl --fail-with-body --silent --show-error \
                 --request POST \
                 --header "Authorization: $GODADDY_PAT" \
                 --header 'Content-Type: application/json' \
-                --data '{"name":"www","type":"CNAME","data":"saferide-peld8.web.app","ttl":3600}' \
+                --data "{\"name\":\"www\",\"type\":\"CNAME\",\"data\":\"$firebase_site\",\"ttl\":3600}" \
                 "${BASE_URL}/${domain}/dns-records"
               echo "  ✓ Created"
             fi
@@ -101,9 +113,10 @@ jobs:
           echo ""
 
           DOMAINS=(
+            prevleakgroup.co.za
             prevleak.company
             saferide.company
-            palettemath.company
+            palettemath.net
             qvedic.company
           )
 
@@ -125,10 +138,11 @@ jobs:
 
           | Domain | Records |
           |--------|---------|
-          | prevleak.company | 2× A (Firebase Hosting) + CNAME www → saferide-peld8.web.app |
+          | prevleakgroup.co.za | 2× A (Firebase Hosting) + CNAME www → prevleakgroup-peld8.web.app |
+          | prevleak.company | 2× A (Firebase Hosting) + CNAME www → prevleak-peld8.web.app |
           | saferide.company | 2× A (Firebase Hosting) + CNAME www → saferide-peld8.web.app |
-          | palettemath.company | 2× A (Firebase Hosting) + CNAME www → saferide-peld8.web.app |
-          | qvedic.company | 2× A (Firebase Hosting) + CNAME www → saferide-peld8.web.app |
+          | palettemath.net | 2× A (Firebase Hosting) + CNAME www → palettemath-peld8.web.app |
+          | qvedic.company | 2× A (Firebase Hosting) + CNAME www → qvedic-peld8.web.app |
 
           **Next step:** In the Firebase Console, add each domain as a custom domain under
           Hosting → Custom domains. Firebase will verify ownership via the A records and
