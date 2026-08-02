@@ -50,7 +50,7 @@ jobs:
           Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "## Front Domain Smoke Results"
           Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- Forwarding check: **$front**"
           Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- DNS records check: **$dns**"
-          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- Logs artifact: `dns-forwarding-validation-logs`"
+          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value '- Logs artifact: dns-forwarding-validation-logs'
 
       - name: Create or update DNS blocker issue
         if: ${{ steps.front.outcome == 'failure' || steps.dns.outcome == 'failure' }}
