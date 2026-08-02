@@ -1,0 +1,137 @@
+name: Configure GoDaddy DNS
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  configure-dns:
+    name: Upsert GitHub Pages records
+    runs-on: ubuntu-latest
+    env:
+      GODADDY_PAT: ${{ secrets.GODADDY_PAT }}
+    steps:
+      - name: Validate credentials
+        shell: bash
+        run: test -n "$GODADDY_PAT"
+
+      - name: Upsert A and CNAME records
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          # GitHub Pages IP addresses
+          GITHUB_PAGES_IPS=(
+            185.199.108.153
+            185.199.109.153
+            185.199.110.153
+            185.199.111.153
+          )
+
+          DOMAINS=(
+            prevleak.company
+            saferide.company
+            palettemath.company
+            qvedic.company
+          )
+
+          BASE_URL="https://api.godaddy.com/v3/domains/zones"
+
+          for domain in "${DOMAINS[@]}"; do
+            echo "=== $domain ==="
+
+            # Upsert each GitHub Pages A record
+            for ip in "${GITHUB_PAGES_IPS[@]}"; do
+              echo "Checking A @ → $ip for $domain"
+
+              existing="$(curl --fail-with-body --silent --show-error \
+                --get \
+                --header "Authorization: $GODADDY_PAT" \
+                --data-urlencode 'type=A' \
+                --data-urlencode 'name=@' \
+                "${BASE_URL}/${domain}/dns-records")"
+
+              if echo "$existing" | jq --exit-status --arg ip "$ip" \
+                  '.items[]? | select(.data == $ip)' > /dev/null 2>&1; then
+                echo "  ✓ A @ → $ip already exists"
+              else
+                echo "  + Creating A @ → $ip"
+                curl --fail-with-body --silent --show-error \
+                  --request POST \
+                  --header "Authorization: $GODADDY_PAT" \
+                  --header 'Content-Type: application/json' \
+                  --data "{\"name\":\"@\",\"type\":\"A\",\"data\":\"$ip\",\"ttl\":3600}" \
+                  "${BASE_URL}/${domain}/dns-records"
+                echo "  ✓ Created"
+              fi
+            done
+
+            # Upsert www CNAME
+            echo "Checking CNAME www → prevleakgroup.github.io for $domain"
+
+            existing="$(curl --fail-with-body --silent --show-error \
+              --get \
+              --header "Authorization: $GODADDY_PAT" \
+              --data-urlencode 'type=CNAME' \
+              --data-urlencode 'name=www' \
+              "${BASE_URL}/${domain}/dns-records")"
+
+            if echo "$existing" | jq --exit-status \
+                '.items[]? | select(.data == "prevleakgroup.github.io")' > /dev/null 2>&1; then
+              echo "  ✓ CNAME www → prevleakgroup.github.io already exists"
+            else
+              echo "  + Creating CNAME www → prevleakgroup.github.io"
+              curl --fail-with-body --silent --show-error \
+                --request POST \
+                --header "Authorization: $GODADDY_PAT" \
+                --header 'Content-Type: application/json' \
+                --data '{"name":"www","type":"CNAME","data":"prevleakgroup.github.io","ttl":3600}' \
+                "${BASE_URL}/${domain}/dns-records"
+              echo "  ✓ Created"
+            fi
+
+            echo ""
+          done
+
+      - name: Verify DNS propagation
+        shell: bash
+        run: |
+          echo "Checking authoritative DNS for all domains..."
+          echo "(Records may take 5–30 minutes to propagate)"
+          echo ""
+
+          DOMAINS=(
+            prevleak.company
+            saferide.company
+            palettemath.company
+            qvedic.company
+          )
+
+          for domain in "${DOMAINS[@]}"; do
+            result="$(dig +short A "$domain" @1.1.1.1 | head -1)"
+            if [[ -n "$result" ]]; then
+              echo "✓ $domain → $result"
+            else
+              echo "⏳ $domain → pending propagation"
+            fi
+          done
+
+      - name: Build run summary
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" << 'EOF'
+          ## Configure GoDaddy DNS
+
+          | Domain | Records |
+          |--------|---------|
+          | prevleak.company | 4× A (GitHub Pages) + CNAME www |
+          | saferide.company | 4× A (GitHub Pages) + CNAME www |
+          | palettemath.company | 4× A (GitHub Pages) + CNAME www |
+          | qvedic.company | 4× A (GitHub Pages) + CNAME www |
+
+          **Next step:** Add each domain as a custom domain in GitHub Pages settings,
+          then wait up to 24 hours for HTTPS certificates to be issued.
+          EOF
