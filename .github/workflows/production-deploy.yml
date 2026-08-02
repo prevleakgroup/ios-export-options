@@ -117,11 +117,6 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.inputs.deployment_type == 'full' || github.event.inputs.deployment_type == 'hosting-only'
     
-    strategy:
-      matrix:
-        brand: [prevleak, saferide, palettemath, qvedic]
-      max-parallel: 2
-    
     steps:
       - uses: actions/checkout@v3
       
@@ -130,25 +125,28 @@ jobs:
         with:
           node-version: '20'
       
-      - name: Deploy Hosting - ${{ matrix.brand }}
+      - name: Deploy Hosting - All Brands
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
         run: |
           npm install -g firebase-tools@latest
-          firebase deploy --only hosting:${{ matrix.brand }} --project saferide-peld8 --token $FIREBASE_TOKEN
+          firebase deploy \
+            --only hosting:prevleak,hosting:saferide,hosting:palettemath,hosting:qvedic \
+            --project saferide-peld8 \
+            --token $FIREBASE_TOKEN
       
-      - name: Get ${{ matrix.brand }} URL
+      - name: List Hosting Sites
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
         run: |
-          firebase hosting:sites:list --project saferide-peld8 --token $FIREBASE_TOKEN | grep ${{ matrix.brand }}
+          firebase hosting:sites:list --project saferide-peld8 --token $FIREBASE_TOKEN
       
       - name: Notify Hosting Deployment
         if: always()
         uses: 8398a7/action-slack@v3
         with:
           status: ${{ job.status }}
-          text: 'Hosting deployment for **${{ matrix.brand }}** - ${{ job.status }}'
+          text: 'Hosting deployment (prevleak, saferide, palettemath, qvedic) - ${{ job.status }}'
           webhook_url: ${{ secrets.SLACK_WEBHOOK }}
           fields: repo,message,commit,author
         continue-on-error: true
