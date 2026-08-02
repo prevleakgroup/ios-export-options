@@ -147,86 +147,8 @@ jobs:
           echo ""
           echo "✅ Firebase deployment complete"
 
-  configure-custom-domains:
-    name: "Configure Custom Domains"
-    needs: deploy-firebase
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Generate domain configuration
-        shell: bash
-        run: |
-          cat > firebase-domains-config.md << 'EOF'
-          # Firebase Custom Domains Configuration
-          
-          ## Project: saferide-peld8
-          
-          ### Step 1: Add Custom Domains in Firebase Console
-          
-          Go to: https://console.firebase.google.com/project/saferide-peld8/hosting
-          
-          For each domain, click "+ Add custom domain":
-          
-          1. **prevleak.company**
-             - Status: Production
-             - Link to GoDaddy DNS
-          
-          2. **saferide.company**
-             - Status: Production
-             - Link to GoDaddy DNS
-          
-          3. **palettemath.company**
-             - Status: Production
-             - Link to GoDaddy DNS
-          
-          4. **qvedic.company**
-             - Status: Production
-             - Link to GoDaddy DNS
-          
-          ### Step 2: Configure DNS in GoDaddy
-          
-          Firebase will provide verification records. Add to GoDaddy:
-          
-          **For root domain (@):**
-          - Type: A Record
-          - Value: Firebase will provide specific IPs
-          - (Usually Firebase CDN IPs)
-          
-          **For www subdomain:**
-          - Type: CNAME
-          - Value: Firebase will provide target domain
-          
-          ### Step 3: Verify in Firebase Console
-          
-          - Click "Verify" button
-          - Wait for DNS propagation (5-30 minutes)
-          - Green checkmark appears when verified
-          - HTTPS certificate auto-generates
-          
-          ### Live URLs
-          
-          After verification:
-          - https://prevleak.company ✅
-          - https://saferide.company ✅
-          - https://palettemath.company ✅
-          - https://qvedic.company ✅
-          
-          All resolve to: saferide-peld8 Firebase Hosting
-          
-          EOF
-          
-          cat firebase-domains-config.md
-
-      - name: Upload domain configuration
-        uses: actions/upload-artifact@v4
-        with:
-          name: firebase-domain-config
-          path: firebase-domains-config.md
-
-  verify-deployment:
-    name: "Verify Deployment"
+  post-deploy:
+    name: "Verify & Domain Config"
     needs: deploy-firebase
     runs-on: ubuntu-latest
     steps:
@@ -250,22 +172,33 @@ jobs:
           firebase hosting:list --project saferide-peld8 --token "$FIREBASE_TOKEN" || true
           
           echo ""
-          echo "📊 Deployment Summary"
-          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-          echo ""
           echo "✅ Firebase Project: saferide-peld8"
           echo "✅ Hosting Deployed: download-site → Firebase"
           echo "✅ Custom Domains: Ready for DNS configuration"
           echo "✅ SSL/HTTPS: Auto-generated"
           echo ""
-          echo "📋 Domains to Configure in GoDaddy:"
-          echo "   1. prevleak.company"
-          echo "   2. saferide.company"
-          echo "   3. palettemath.company"
-          echo "   4. qvedic.company"
+          echo "📋 Domains: prevleak.company | saferide.company | palettemath.company | qvedic.company"
+          echo "🔗 Console: https://console.firebase.google.com/project/saferide-peld8/hosting"
           echo ""
-          echo "🔗 Firebase Console:"
-          echo "   https://console.firebase.google.com/project/saferide-peld8/hosting"
-          echo ""
-          echo "✨ Next: Configure DNS records in GoDaddy for each domain"
-          echo ""
+
+      - name: Generate domain configuration
+        shell: bash
+        run: |
+          cat > firebase-domains-config.md << 'EOF'
+          # Firebase Custom Domains Configuration
+          
+          ## Project: saferide-peld8
+          
+          Go to: https://console.firebase.google.com/project/saferide-peld8/hosting
+          and click "+ Add custom domain" for each domain:
+          prevleak.company | saferide.company | palettemath.company | qvedic.company
+          
+          Firebase will provide DNS records to add in GoDaddy.
+          After DNS propagation (~5-30 min) HTTPS certs auto-generate.
+          EOF
+
+      - name: Upload domain configuration
+        uses: actions/upload-artifact@v4
+        with:
+          name: firebase-domain-config
+          path: firebase-domains-config.md

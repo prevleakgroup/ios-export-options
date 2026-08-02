@@ -56,10 +56,16 @@ jobs:
             exit 1
           fi
 
-  deploy-prevleak:
-    name: Deploy PrevLeak to prevleak.company
+  deploy-brands:
+    name: Deploy ${{ matrix.brand }} hosting
     needs: validate-and-build
     runs-on: ubuntu-latest
+    if: ${{ secrets.FIREBASE_TOKEN != '' }}
+    strategy:
+      matrix:
+        brand: [prevleak, saferide, palettemath, qvedic]
+      max-parallel: 2
+      fail-fast: false
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -69,104 +75,23 @@ jobs:
       - name: Install Firebase CLI
         run: npm install -g firebase-tools
 
-      - name: Deploy PrevLeak
+      - name: Deploy ${{ matrix.brand }}
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
         run: |
           firebase deploy \
-            --only hosting:prevleak \
+            --only hosting:${{ matrix.brand }} \
             --project saferide-peld8 \
             --debug
 
       - name: Verify deployment
         run: |
-          echo "✓ PrevLeak deployed to https://prevleak-peld8.web.app"
-          echo "Domain: prevleak.company (requires DNS configuration)"
-
-  deploy-saferide:
-    name: Deploy Saferide to saferide.company
-    needs: validate-and-build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-
-      - name: Install Firebase CLI
-        run: npm install -g firebase-tools
-
-      - name: Deploy Saferide
-        env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-        run: |
-          firebase deploy \
-            --only hosting:saferide \
-            --project saferide-peld8 \
-            --debug
-
-      - name: Verify deployment
-        run: |
-          echo "✓ Saferide deployed to https://saferide-peld8.web.app"
-          echo "Domain: saferide.company (requires DNS configuration)"
-
-  deploy-palettemath:
-    name: Deploy Palettemath to palettemath.company
-    needs: validate-and-build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-
-      - name: Install Firebase CLI
-        run: npm install -g firebase-tools
-
-      - name: Deploy Palettemath
-        env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-        run: |
-          firebase deploy \
-            --only hosting:palettemath \
-            --project saferide-peld8 \
-            --debug
-
-      - name: Verify deployment
-        run: |
-          echo "✓ Palettemath deployed to https://palettemath-peld8.web.app"
-          echo "Domain: palettemath.company (requires DNS configuration)"
-
-  deploy-qvedic:
-    name: Deploy Qvedic to qvedic.company
-    needs: validate-and-build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-
-      - name: Install Firebase CLI
-        run: npm install -g firebase-tools
-
-      - name: Deploy Qvedic
-        env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-        run: |
-          firebase deploy \
-            --only hosting:qvedic \
-            --project saferide-peld8 \
-            --debug
-
-      - name: Verify deployment
-        run: |
-          echo "✓ Qvedic deployed to https://qvedic-peld8.web.app"
-          echo "Domain: qvedic.company (requires DNS configuration)"
+          echo "✓ ${{ matrix.brand }} deployed to https://${{ matrix.brand }}-peld8.web.app"
+          echo "Domain: ${{ matrix.brand }}.company (requires DNS configuration)"
 
   finalize:
     name: Deployment Summary
-    needs: [deploy-prevleak, deploy-saferide, deploy-palettemath, deploy-qvedic]
+    needs: [deploy-brands]
     runs-on: ubuntu-latest
     if: always()
     steps:
