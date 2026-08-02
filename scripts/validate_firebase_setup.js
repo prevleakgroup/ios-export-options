@@ -34,8 +34,18 @@ function main() {
   assert(firebaserc.projects && firebaserc.projects.default === reqs.firebase.projectId,
     `.firebaserc default project mismatch. Expected ${reqs.firebase.projectId}`);
 
-  assert(firebaseJson.hosting && firebaseJson.hosting.public === reqs.firebase.hostingPublicDir,
-    `firebase.json hosting.public mismatch. Expected ${reqs.firebase.hostingPublicDir}`);
+  const hostingConfigs = Array.isArray(firebaseJson.hosting)
+    ? firebaseJson.hosting
+    : [firebaseJson.hosting];
+
+  assert(hostingConfigs.length > 0, 'firebase.json hosting config is missing');
+
+  for (const cfg of hostingConfigs) {
+    assert(
+      cfg && cfg.public && cfg.public.startsWith(reqs.firebase.hostingPublicDir),
+      `firebase.json hosting.public mismatch. Expected path under ${reqs.firebase.hostingPublicDir}`
+    );
+  }
 
   assert(Array.isArray(firebaseJson.functions) && firebaseJson.functions.length > 0,
     'firebase.json functions config is missing');
@@ -52,7 +62,7 @@ function main() {
   assert(appHostingSiteUrl === reqs.firebase.appHostingSiteUrl,
     `apphosting NEXT_PUBLIC_SITE_URL mismatch. Expected ${reqs.firebase.appHostingSiteUrl}`);
 
-  const headerList = ((firebaseJson.hosting || {}).headers || []).flatMap((h) => h.headers || []);
+  const headerList = hostingConfigs.flatMap((cfg) => (cfg.headers || []).flatMap((h) => h.headers || []));
   const headerKeys = new Set(headerList.map((h) => h.key));
   for (const key of reqs.securityHeadersRequired) {
     assert(headerKeys.has(key), `firebase.json missing required security header: ${key}`);

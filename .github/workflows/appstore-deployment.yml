@@ -226,7 +226,7 @@ jobs:
       - name: Create deployment manifest
         shell: bash
         run: |
-          cat > deployment-manifest.json << 'EOF'
+          cat > deployment-manifest.json << EOF
           {
             "timestamp": "$(date -u +'%Y-%m-%dT%H:%M:%SZ')",
             "environment": "${{ github.event.inputs.environment || 'production' }}",

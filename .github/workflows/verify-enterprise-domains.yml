@@ -1,0 +1,77 @@
+name: Verify Enterprise Domains
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  update-dns:
+    runs-on: ubuntu-latest
+    env:
+      GODADDY_PAT: ${{ secrets.GODADDY_PAT }}
+    steps:
+      - name: Validate credentials
+        shell: bash
+        run: |
+          test -n "$GODADDY_PAT"
+
+      - name: Add GitHub Enterprise TXT records
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          records=(
+            'saferideapp.co.za|_gh-prevleak-group-e|1ad1da9efc'
+            'saferiderapp.co.za|_gh-prevleak-group-e|67e70f1f02'
+            'saferidesapp.co.za|_gh-prevleak-group-e|37e1758b0f'
+            'palettemath.co.za|_gh-prevleak-group-e.www|08e59e3b12'
+            'prevleakgroup.co.za|_gh-prevleak-group-e.www|4ba15a2805'
+          )
+
+          for record in "${records[@]}"; do
+            IFS='|' read -r domain name value <<< "$record"
+            echo "Checking TXT ${name}.${domain}"
+
+            existing="$(curl --fail-with-body --silent --show-error \
+              --get \
+              --header "Authorization: Bearer ${GODADDY_PAT}" \
+              --data-urlencode 'type=TXT' \
+              --data-urlencode "name=${name}" \
+              "https://api.godaddy.com/v3/domains/zones/${domain}/dns-records")"
+
+            if jq --exit-status --arg value "$value" '.items[]? | select(.data == $value)' <<< "$existing" > /dev/null; then
+              echo "TXT ${name}.${domain} already exists"
+              continue
+            fi
+
+            echo "Creating TXT ${name}.${domain}"
+            curl --fail-with-body --silent --show-error \
+              --request POST \
+              --header "Authorization: Bearer ${GODADDY_PAT}" \
+              --header 'Content-Type: application/json' \
+              --data "{\"name\":\"${name}\",\"type\":\"TXT\",\"data\":\"${value}\",\"ttl\":600}" \
+              "https://api.godaddy.com/v3/domains/zones/${domain}/dns-records"
+          done
+
+      - name: Check authoritative DNS
+        shell: bash
+        run: |
+          records=(
+            '_gh-prevleak-group-e.saferideapp.co.za|1ad1da9efc'
+            '_gh-prevleak-group-e.saferiderapp.co.za|67e70f1f02'
+            '_gh-prevleak-group-e.saferidesapp.co.za|37e1758b0f'
+            '_gh-prevleak-group-e.www.palettemath.co.za|08e59e3b12'
+            '_gh-prevleak-group-e.www.prevleakgroup.co.za|4ba15a2805'
+          )
+
+          for record in "${records[@]}"; do
+            IFS='|' read -r hostname expected <<< "$record"
+            actual="$(dig +short TXT "$hostname" @1.1.1.1 | tr -d '"')"
+            if [[ "$actual" == *"$expected"* ]]; then
+              echo "Verified ${hostname}"
+            else
+              echo "Pending DNS propagation for ${hostname}"
+            fi
+          done
