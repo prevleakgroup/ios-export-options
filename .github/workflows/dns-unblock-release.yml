@@ -12,7 +12,7 @@ permissions:
 jobs:
   publish-after-dns-unblock:
     if: ${{ github.event_name == 'workflow_dispatch' || contains(toJson(github.event.issue.labels), 'ops-blocker') }}
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4

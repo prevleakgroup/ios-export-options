@@ -63,6 +63,10 @@ function main() {
 
   assert(appStoreGoogle.type === 'appstore', 'Google app-store manifest type must be appstore');
   assert(appStoreApple.type === 'appstore', 'Apple app-store manifest type must be appstore');
+  assert(typeof appStoreGoogle.sourcePath === 'string' && appStoreGoogle.sourcePath.length > 0, 'Missing sourcePath in google-play manifest');
+  assert(typeof appStoreApple.sourcePath === 'string' && appStoreApple.sourcePath.length > 0, 'Missing sourcePath in apple-app-store manifest');
+  assert(typeof appStoreGoogle.publishTarget === 'string' && appStoreGoogle.publishTarget.startsWith('https://'), 'Missing or invalid publishTarget in google-play manifest');
+  assert(typeof appStoreApple.publishTarget === 'string' && appStoreApple.publishTarget.startsWith('https://'), 'Missing or invalid publishTarget in apple-app-store manifest');
   assert(appStoreGoogle.listingUrl === domainMap.appStoreLinks.googlePlay, 'Google app-store URL mismatch');
   assert(appStoreApple.listingUrl === domainMap.appStoreLinks.appleAppStore, 'Apple app-store URL mismatch');
 

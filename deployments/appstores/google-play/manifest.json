@@ -3,6 +3,7 @@
   "type": "appstore",
   "store": "google-play",
   "sourcePath": "download-site",
+  "publishTarget": "https://play.google.com/store/search?q=PrevLeak%20Group%20Saferide&c=apps",
   "listingUrl": "https://play.google.com/store/search?q=PrevLeak%20Group%20Saferide&c=apps",
   "publishScope": "public-listing-only",
   "privacyControls": {

@@ -5,6 +5,7 @@
   "targets": {
     "saferide-peld8": {
       "hosting": {
+        "prevleakgroup": ["prevleakgroup-peld8"],
         "prevleak": ["prevleak-peld8"],
         "saferide": ["saferide-peld8"],
         "palettemath": ["palettemath-peld8"],

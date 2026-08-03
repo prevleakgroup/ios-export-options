@@ -207,6 +207,43 @@ jobs:
           echo "✅ Production deployment successful"
           echo "Brands deployed: palettemath, saferide, prevleak, qvedic, plumber"
 
+      - name: Check endpoint health
+        if: success()
+        run: |
+          echo "Monitoring all brand endpoints..."
+          curl -s https://saferide-peld8.web.app/health || true
+
+      - name: Verify brand data consistency
+        if: success()
+        run: |
+          echo "Validating brand data after deployment..."
+          node scripts/validate-data-consistency.js
+
+      - name: Monitor error rates
+        if: success()
+        run: |
+          echo "Checking error rates in Cloud Logging..."
+          gcloud logging read "severity>=ERROR" --limit=10 --project=${{ env.PROJECT_ID }}
+
+      - name: Generate and upload deployment report
+        if: always()
+        run: |
+          echo "Generating deployment report..."
+          cat > deployment-report.txt << 'EOF'
+          Deployment Report - $(date)
+          ================================
+          Project: saferide-peld8
+          Brands: palettemath, saferide, prevleak, qvedic, plumber
+          Status: SUCCESS
+          EOF
+
+      - name: Upload deployment report
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: deployment-report
+          path: deployment-report.txt
+
   rollback:
     name: Rollback on Failure
     runs-on: ubuntu-latest
@@ -235,43 +272,3 @@ jobs:
         run: |
           echo "🚨 Deployment rollback triggered"
           echo "Please review: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-
-  monitor:
-    name: Post-Deployment Monitoring
-    needs: deploy-production
-    runs-on: ubuntu-latest
-    if: success()
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Check endpoint health
-        run: |
-          echo "Monitoring all brand endpoints..."
-          curl -s https://saferide-peld8.web.app/health || true
-
-      - name: Verify brand data consistency
-        run: |
-          echo "Validating brand data after deployment..."
-          node scripts/validate-data-consistency.js
-
-      - name: Monitor error rates
-        run: |
-          echo "Checking error rates in Cloud Logging..."
-          gcloud logging read "severity>=ERROR" --limit=10 --project=${{ env.PROJECT_ID }}
-
-      - name: Generate deployment report
-        run: |
-          echo "Generating deployment report..."
-          cat > deployment-report.txt << 'EOF'
-          Deployment Report - $(date)
-          ================================
-          Project: saferide-peld8
-          Brands: palettemath, saferide, prevleak, qvedic, plumber
-          Status: SUCCESS
-          EOF
-
-      - name: Upload deployment report
-        uses: actions/upload-artifact@v4
-        with:
-          name: deployment-report
-          path: deployment-report.txt

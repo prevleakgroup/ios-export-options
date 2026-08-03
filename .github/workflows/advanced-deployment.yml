@@ -56,7 +56,7 @@ jobs:
 
   validate-dns:
     name: Validate DNS Configuration
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     needs: verify-secrets
     if: ${{ !inputs.skip_dns_check }}
     steps:

@@ -89,7 +89,7 @@ jobs:
   deploy-ios:
     name: "Deploy to iOS App Store"
     needs: validate-build
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     if: |
       github.event.inputs.target == 'ios' || 
       github.event.inputs.target == 'all' ||

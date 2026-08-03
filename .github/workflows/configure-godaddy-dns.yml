@@ -1,0 +1,150 @@
+name: Configure GoDaddy DNS
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  configure-dns:
+    name: Upsert GitHub Pages records
+    runs-on: ubuntu-latest
+    env:
+      GODADDY_PAT: ${{ secrets.GODADDY_PAT }}
+    steps:
+      - name: Validate credentials
+        shell: bash
+        run: test -n "$GODADDY_PAT"
+
+      - name: Upsert A and CNAME records
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          # Firebase Hosting IPs
+          FIREBASE_IPS=(
+            151.101.1.195
+            151.101.65.195
+          )
+
+          DOMAINS=(
+            prevleakgroup.co.za
+            prevleak.company
+            saferide.company
+            palettemath.net
+            qvedic.company
+          )
+
+          BASE_URL="https://api.godaddy.com/v3/domains/zones"
+
+          for domain in "${DOMAINS[@]}"; do
+            echo "=== $domain ==="
+
+            # Derive Firebase site name from domain
+            case "$domain" in
+              prevleakgroup.co.za)  firebase_site="prevleakgroup-peld8.web.app" ;;
+              prevleak.company)     firebase_site="prevleak-peld8.web.app" ;;
+              saferide.company)     firebase_site="saferide-peld8.web.app" ;;
+              palettemath.net)      firebase_site="palettemath-peld8.web.app" ;;
+              qvedic.company)       firebase_site="qvedic-peld8.web.app" ;;
+              *)                    firebase_site="saferide-peld8.web.app" ;;
+            esac
+
+            # Upsert each Firebase Hosting A record
+            for ip in "${FIREBASE_IPS[@]}"; do
+              echo "Checking A @ → $ip for $domain"
+
+              existing="$(curl --fail-with-body --silent --show-error \
+                --get \
+                --header "Authorization: $GODADDY_PAT" \
+                --data-urlencode 'type=A' \
+                --data-urlencode 'name=@' \
+                "${BASE_URL}/${domain}/dns-records")"
+
+              if echo "$existing" | jq --exit-status --arg ip "$ip" \
+                  '.items[]? | select(.data == $ip)' > /dev/null 2>&1; then
+                echo "  ✓ A @ → $ip already exists"
+              else
+                echo "  + Creating A @ → $ip"
+                curl --fail-with-body --silent --show-error \
+                  --request POST \
+                  --header "Authorization: $GODADDY_PAT" \
+                  --header 'Content-Type: application/json' \
+                  --data "{\"name\":\"@\",\"type\":\"A\",\"data\":\"$ip\",\"ttl\":3600}" \
+                  "${BASE_URL}/${domain}/dns-records"
+                echo "  ✓ Created"
+              fi
+            done
+
+            # Upsert www CNAME → per-domain Firebase site
+            echo "Checking CNAME www → $firebase_site for $domain"
+
+            existing="$(curl --fail-with-body --silent --show-error \
+              --get \
+              --header "Authorization: $GODADDY_PAT" \
+              --data-urlencode 'type=CNAME' \
+              --data-urlencode 'name=www' \
+              "${BASE_URL}/${domain}/dns-records")"
+
+            if echo "$existing" | jq --exit-status \
+                --arg site "$firebase_site" \
+                '.items[]? | select(.data == $site)' > /dev/null 2>&1; then
+              echo "  ✓ CNAME www → $firebase_site already exists"
+            else
+              echo "  + Creating CNAME www → $firebase_site"
+              curl --fail-with-body --silent --show-error \
+                --request POST \
+                --header "Authorization: $GODADDY_PAT" \
+                --header 'Content-Type: application/json' \
+                --data "{\"name\":\"www\",\"type\":\"CNAME\",\"data\":\"$firebase_site\",\"ttl\":3600}" \
+                "${BASE_URL}/${domain}/dns-records"
+              echo "  ✓ Created"
+            fi
+
+            echo ""
+          done
+
+      - name: Verify DNS propagation
+        shell: bash
+        run: |
+          echo "Checking authoritative DNS for all domains..."
+          echo "(Records may take 5–30 minutes to propagate)"
+          echo ""
+
+          DOMAINS=(
+            prevleakgroup.co.za
+            prevleak.company
+            saferide.company
+            palettemath.net
+            qvedic.company
+          )
+
+          for domain in "${DOMAINS[@]}"; do
+            result="$(dig +short A "$domain" @1.1.1.1 | head -1)"
+            if [[ -n "$result" ]]; then
+              echo "✓ $domain → $result"
+            else
+              echo "⏳ $domain → pending propagation"
+            fi
+          done
+
+      - name: Build run summary
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" << 'EOF'
+          ## Configure GoDaddy DNS (Firebase Hosting)
+
+          | Domain | Records |
+          |--------|---------|
+          | prevleakgroup.co.za | 2× A (Firebase Hosting) + CNAME www → prevleakgroup-peld8.web.app |
+          | prevleak.company | 2× A (Firebase Hosting) + CNAME www → prevleak-peld8.web.app |
+          | saferide.company | 2× A (Firebase Hosting) + CNAME www → saferide-peld8.web.app |
+          | palettemath.net | 2× A (Firebase Hosting) + CNAME www → palettemath-peld8.web.app |
+          | qvedic.company | 2× A (Firebase Hosting) + CNAME www → qvedic-peld8.web.app |
+
+          **Next step:** In the Firebase Console, add each domain as a custom domain under
+          Hosting → Custom domains. Firebase will verify ownership via the A records and
+          auto-issue HTTPS certificates (~5–30 minutes after DNS propagation).
+          EOF
