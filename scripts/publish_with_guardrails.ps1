@@ -87,8 +87,9 @@ function Get-AppHostingStatus {
     return $lines
   }
 
-  $authAccount = (& gcloud auth list --filter=status:ACTIVE --format='value(account)' 2>$null).Trim()
-  if ([string]::IsNullOrWhiteSpace($authAccount)) {
+  $authOutput = @(& gcloud auth list --filter=status:ACTIVE --format='value(account)' 2>$null)
+  $authAccount = ($authOutput | ForEach-Object { if ($_ -ne $null) { $_.ToString().Trim() } } | Where-Object { -not [string]::IsNullOrWhiteSpace($_) }) -join [Environment]::NewLine
+  if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($authAccount)) {
     $lines += 'gcloud is installed but no active account is available'
     return $lines
   }
