@@ -105,7 +105,7 @@ function Get-AppHostingStatus {
 }
 
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
-$logDir = Join-Path $repoRoot 'ops\validation-logs'
+$logDir = Join-Path (Join-Path $repoRoot 'ops') 'validation-logs'
 New-Item -ItemType Directory -Force -Path $logDir | Out-Null
 $ts = Get-Date -Format 'yyyyMMdd-HHmmss'
 
@@ -121,23 +121,31 @@ foreach ($entry in $appHostingStatus) {
   Write-Output "  - $entry"
 }
 
-Invoke-And-Assert -Name 'Validate source governance' -Command { node "$repoRoot\scripts\validate_operational_contracts.js" }
-Invoke-And-Assert -Name 'Validate Firebase setup requirements' -Command { node "$repoRoot\scripts\validate_firebase_setup.js" }
-Invoke-And-Assert -Name 'Validate local link integrity' -Command { node "$repoRoot\scripts\validate_link_integrity.js" }
-Invoke-And-Assert -Name 'Validate deployment trees' -Command { node "$repoRoot\scripts\validate_deployment_trees.js" }
+$validateOperationalContracts = Join-Path $repoRoot 'scripts/validate_operational_contracts.js'
+$validateFirebaseSetup = Join-Path $repoRoot 'scripts/validate_firebase_setup.js'
+$validateLinkIntegrity = Join-Path $repoRoot 'scripts/validate_link_integrity.js'
+$validateDeploymentTrees = Join-Path $repoRoot 'scripts/validate_deployment_trees.js'
+$checkFrontDomains = Join-Path $repoRoot 'scripts/check_front_domains.ps1'
+$validateDnsTxtRecords = Join-Path $repoRoot 'scripts/validate_dns_txt_records.ps1'
+
+Invoke-And-Assert -Name 'Validate source governance' -Command { node $validateOperationalContracts }
+Invoke-And-Assert -Name 'Validate Firebase setup requirements' -Command { node $validateFirebaseSetup }
+Invoke-And-Assert -Name 'Validate local link integrity' -Command { node $validateLinkIntegrity }
+Invoke-And-Assert -Name 'Validate deployment trees' -Command { node $validateDeploymentTrees }
 
 if (-not $SkipExternalDnsChecks) {
-  Invoke-And-Assert -Name 'Validate front-domain forwarding' -Command { powershell -ExecutionPolicy Bypass -File "$repoRoot\scripts\check_front_domains.ps1" }
-  Invoke-And-Assert -Name 'Validate DNS TXT/SPF/DMARC' -Command { powershell -ExecutionPolicy Bypass -File "$repoRoot\scripts\validate_dns_txt_records.ps1" }
+  Invoke-And-Assert -Name 'Validate front-domain forwarding' -Command { powershell -ExecutionPolicy Bypass -File $checkFrontDomains }
+  Invoke-And-Assert -Name 'Validate DNS TXT/SPF/DMARC' -Command { powershell -ExecutionPolicy Bypass -File $validateDnsTxtRecords }
 }
 
 $previewUrl = ''
 if (-not $ValidateOnly) {
+  $previewLogPath = Join-Path $logDir "preview-deploy-$ts.log"
   Invoke-And-Assert -Name 'Deploy preview channel' -Command {
-    firebase hosting:channel:deploy $PreviewChannelId --expires 7d | Tee-Object -FilePath "$logDir\preview-deploy-$ts.log"
+    firebase hosting:channel:deploy $PreviewChannelId --expires 7d | Tee-Object -FilePath $previewLogPath
   }
 
-  $previewLog = Get-Content "$logDir\preview-deploy-$ts.log" -Raw
+  $previewLog = Get-Content $previewLogPath -Raw
   $previewUrl = [regex]::Match($previewLog, 'https://[^\s]+\.web\.app').Value
   if (-not $previewUrl) {
     Write-Error 'Unable to detect preview URL from deploy output.'
@@ -151,8 +159,9 @@ if (-not $ValidateOnly) {
     exit 1
   }
 
+  $prodLogPath = Join-Path $logDir "prod-deploy-$ts.log"
   Invoke-And-Assert -Name 'Deploy production hosting' -Command {
-    firebase deploy --only hosting | Tee-Object -FilePath "$logDir\prod-deploy-$ts.log"
+    firebase deploy --only hosting | Tee-Object -FilePath $prodLogPath
   }
 
   $prodFailures = Test-Urls -BaseUrl "https://$FirebaseProjectId.web.app" -Paths $paths
