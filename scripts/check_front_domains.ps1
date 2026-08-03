@@ -1,5 +1,24 @@
 $ErrorActionPreference = 'Stop'
 
+function Get-CurlCommand {
+  foreach ($candidate in @('curl', 'curl.exe')) {
+    $command = Get-Command $candidate -ErrorAction SilentlyContinue
+    if ($null -ne $command) {
+      if ($command.CommandType -eq 'Application' -or $command.CommandType -eq 'ExternalScript') {
+        return $command.Source
+      }
+    }
+  }
+
+  return $null
+}
+
+$curlCommand = Get-CurlCommand
+if (-not $curlCommand) {
+  Write-Error 'curl is not installed or not available on PATH.'
+  exit 1
+}
+
 $sourceOfTruthPath = Join-Path $PSScriptRoot '..\company-docs\routing-dns-source-of-truth.json'
 if (-not (Test-Path $sourceOfTruthPath)) {
   Write-Error "Missing source-of-truth file: $sourceOfTruthPath"
@@ -20,7 +39,7 @@ foreach ($item in $expected) {
   $url = "https://$domain"
 
   Write-Output "Checking $url"
-  $trace = curl.exe -sS -L -o NUL -w "%{url_effective}|%{num_redirects}|%{http_code}" $url
+  $trace = & $curlCommand -sS -L -o NUL -w "%{url_effective}|%{num_redirects}|%{http_code}" $url
 
   if ($LASTEXITCODE -ne 0) {
     $failures += "curl failed for $domain"

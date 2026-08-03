@@ -7,6 +7,25 @@ param(
 
 $ErrorActionPreference = 'Stop'
 
+function Get-CurlCommand {
+  foreach ($candidate in @('curl', 'curl.exe')) {
+    $command = Get-Command $candidate -ErrorAction SilentlyContinue
+    if ($null -ne $command) {
+      if ($command.CommandType -eq 'Application' -or $command.CommandType -eq 'ExternalScript') {
+        return $command.Source
+      }
+    }
+  }
+
+  return $null
+}
+
+$curlCommand = Get-CurlCommand
+if (-not $curlCommand) {
+  Write-Error 'curl is not installed or not available on PATH.'
+  exit 1
+}
+
 function Invoke-And-Assert {
   param(
     [string]$Name,
@@ -29,7 +48,7 @@ function Test-Urls {
   $failures = @()
   foreach ($p in $Paths) {
     $url = "$BaseUrl$p"
-    $trace = curl.exe -sS -L -o NUL -w "%{http_code}|%{url_effective}" $url
+    $trace = & $curlCommand -sS -L -o NUL -w "%{http_code}|%{url_effective}" $url
     if ($LASTEXITCODE -ne 0) {
       $failures += "curl failed for $url"
       continue

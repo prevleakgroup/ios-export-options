@@ -4,6 +4,73 @@ param(
 
 $ErrorActionPreference = 'Stop'
 
+function Get-TxtRecords {
+  param(
+    [Parameter(Mandatory = $true)]
+    [string]$Name
+  )
+
+  if (Get-Command Resolve-DnsName -ErrorAction SilentlyContinue) {
+    try {
+      $records = Resolve-DnsName -Name $Name -Type TXT -ErrorAction Stop |
+        Where-Object { $_.Type -eq 'TXT' } |
+        ForEach-Object { ($_.Strings -join '') }
+
+      if ($null -ne $records) {
+        return @($records)
+      }
+    }
+    catch {
+      Write-Verbose "Resolve-DnsName failed for $Name"
+    }
+  }
+
+  $dig = Get-Command dig -ErrorAction SilentlyContinue
+  if ($dig) {
+    try {
+      $output = & $dig.Source +short TXT $Name 2>$null
+      if ($LASTEXITCODE -eq 0) {
+        return @($output | ForEach-Object {
+          $value = $_.ToString().Trim()
+          if ($value.StartsWith('"') -and $value.EndsWith('"') -and $value.Length -ge 2) {
+            $value = $value.Substring(1, $value.Length - 2)
+          }
+          $value = $value -replace '" "', '"'
+          return $value
+        } | Where-Object { $_ })
+      }
+    }
+    catch {
+      Write-Verbose "dig failed for $Name"
+    }
+  }
+
+  $nslookup = Get-Command nslookup -ErrorAction SilentlyContinue
+  if ($nslookup) {
+    try {
+      $output = & $nslookup.Source -type=TXT $Name 2>$null
+      if ($LASTEXITCODE -eq 0) {
+        $results = @()
+        foreach ($line in $output) {
+          if ($line -match 'text =') {
+            $value = ($line -split '=', 2)[1].Trim()
+            if ($value.StartsWith('"') -and $value.EndsWith('"') -and $value.Length -ge 2) {
+              $value = $value.Substring(1, $value.Length - 2)
+            }
+            $results += $value
+          }
+        }
+        return @($results | Where-Object { $_ })
+      }
+    }
+    catch {
+      Write-Verbose "nslookup failed for $Name"
+    }
+  }
+
+  return @()
+}
+
 $sourceOfTruthPath = Join-Path $PSScriptRoot '..\company-docs\routing-dns-source-of-truth.json'
 if (-not (Test-Path $sourceOfTruthPath)) {
   Write-Error "Missing source-of-truth file: $sourceOfTruthPath"
@@ -29,18 +96,14 @@ foreach ($domain in $Domains) {
   $dmarcTxt = @()
 
   try {
-    $apexTxt = Resolve-DnsName -Name $domain -Type TXT -ErrorAction Stop |
-      Where-Object { $_.Type -eq 'TXT' } |
-      ForEach-Object { ($_.Strings -join '') }
+    $apexTxt = Get-TxtRecords -Name $domain
   }
   catch {
     Write-Output 'Apex TXT lookup failed'
   }
 
   try {
-    $dmarcTxt = Resolve-DnsName -Name "_dmarc.$domain" -Type TXT -ErrorAction Stop |
-      Where-Object { $_.Type -eq 'TXT' } |
-      ForEach-Object { ($_.Strings -join '') }
+    $dmarcTxt = Get-TxtRecords -Name "_dmarc.$domain"
   }
   catch {
     Write-Output 'DMARC TXT lookup failed'
