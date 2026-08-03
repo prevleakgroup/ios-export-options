@@ -94,9 +94,20 @@ function Get-AppHostingStatus {
     return $lines
   }
 
-  $backendOutput = (& gcloud apphosting backends list --project $ProjectId --format='value(name)' 2>$null)
-  if ($LASTEXITCODE -eq 0 -and -not [string]::IsNullOrWhiteSpace($backendOutput)) {
+  $previousErrorActionPreference = $ErrorActionPreference
+  try {
+    # App Hosting is not included in every gcloud installation.
+    $ErrorActionPreference = 'Continue'
+    $backendOutput = @(& gcloud apphosting backends list --project $ProjectId --format='value(name)' 2>$null)
+    $backendExitCode = $LASTEXITCODE
+  } finally {
+    $ErrorActionPreference = $previousErrorActionPreference
+  }
+
+  if ($backendExitCode -eq 0 -and -not [string]::IsNullOrWhiteSpace($backendOutput)) {
     $lines += ('App Hosting backends detected: ' + (($backendOutput -split "`r?`n") -join ', '))
+  } elseif ($backendExitCode -eq 2) {
+    $lines += 'gcloud App Hosting command is unavailable; backend lookup skipped'
   } else {
     $lines += 'App Hosting backend lookup returned no active backends'
   }
