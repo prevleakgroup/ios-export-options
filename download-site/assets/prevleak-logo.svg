@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="PrevLeak logo">
-  <rect width="256" height="256" rx="56" fill="#0f172a"/>
-  <circle cx="128" cy="128" r="86" fill="#f8fafc" fill-opacity="0.96"/>
-  <path d="M84 176L128 72l44 104H84z" fill="#2468d6"/>
-  <path d="M100 176h56l-28-44-28 44z" fill="#1f9f9b"/>
-  <circle cx="128" cy="128" r="10" fill="#f0b043"/>
-</svg>

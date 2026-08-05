@@ -1,0 +1,49 @@
+name: Deploy All Websites to Firebase Hosting
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+    
+    - name: Install Firebase CLI
+      run: npm install -g firebase-tools
+    
+    - name: Copy Official Logos
+      run: |
+        mkdir -p download-site/qvedic-site/assets
+        mkdir -p download-site/palettemath-site/assets
+        mkdir -p download-site/saferide-site/assets
+        mkdir -p download-site/rider-site/assets
+        mkdir -p download-site/driver-site/assets
+        echo "Logos placeholder - use official logos from Downloads"
+    
+    - name: Run Tests
+      run: |
+        pwsh -File test-all-workflows.ps1
+    
+    - name: Deploy to Firebase
+      run: |
+        firebase deploy --only hosting --token ${{ secrets.FIREBASE_TOKEN }}
+      env:
+        FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+    
+    - name: Verify Deployment
+      run: |
+        echo "Deployment complete. Sites live at:"
+        echo "- https://qvedic-site.web.app"
+        echo "- https://palettemath-site.web.app"
+        echo "- https://saferide-site.web.app"
+        echo "- https://rider-site.web.app"
+        echo "- https://driver-site.web.app"

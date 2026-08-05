@@ -8,7 +8,9 @@
         "prevleak": ["prevleak-peld8"],
         "saferide": ["saferide-peld8"],
         "palettemath": ["palettemath-peld8"],
-        "qvedic": ["qvedic-peld8"]
+        "qvedic": ["qvedic-peld8"],
+        "rider": ["rider-peld8"],
+        "driver": ["driver-peld8"]
       }
     }
   }

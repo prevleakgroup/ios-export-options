@@ -1,0 +1,87 @@
+GODADDY BRIEF: 30-DAY AUTOMATED SOCIAL MEDIA MARKETING CAMPAIGN
+
+PROJECT: Multi-Domain Social Media & Marketing Automation
+DOMAINS: 
+- qvedic.company
+- palettemath.company
+- saferide.company
+- rider.saferide.company
+- driver.saferide.company
+
+TASK 1: DOMAIN & DNS CONFIGURATION
+
+Configure all 5 domains with Firebase Hosting A records:
+- 199.36.158.100
+- 199.36.159.100
+- 199.36.160.100
+- 199.36.161.100
+
+Enable HTTPS/SSL certificates (auto-provisioned by Firebase)
+Set TTL: 3600 seconds
+
+TASK 2: SOCIAL MEDIA MARKETING AUTOMATION (30 Days)
+
+Platform Coverage: Instagram, Facebook, LinkedIn, Twitter/X, TikTok
+
+Campaign Duration: 30 days continuous
+Post Frequency: 5 posts per day per domain
+Total Posts: 750+ posts (5 brands x 5 posts/day x 30 days)
+
+BRAND-SPECIFIC TARGETING:
+
+1. qvedic.company
+   Target: B2B executives, investors, enterprise decision-makers
+   Content Focus: Enterprise solutions, growth metrics, partnerships
+   Geographic Target: Global, focus on major business centers
+
+2. palettemath.company
+   Target: Students ages 12-25, teachers, education professionals
+   Content Focus: Learning outcomes, success stories, educational resources
+   Geographic Target: Global, emphasis on English-speaking markets
+
+3. saferide.company
+   Target: Urban riders/drivers aged 18-55, commuters, gig economy workers
+   Content Focus: Safety, transparency, driver/rider benefits, reviews
+   Geographic Target: Major metropolitan areas, urban centers
+
+4. rider.saferide.company
+   Target: Active riders, commuters, app-using millennials/Gen Z
+   Content Focus: App features, booking tips, promos, community engagement
+   Geographic Target: Cities with active rider base
+
+5. driver.saferide.company
+   Target: Active drivers, gig workers, independent contractors
+   Content Focus: Earning potential, flexibility, success stories, driver community
+   Geographic Target: Cities with active driver recruitment
+
+EXECUTION:
+- Configure GoDaddy Social Media Marketing integration
+- Auto-schedule 5 posts daily per domain
+- Cross-platform distribution (Instagram, Facebook, LinkedIn, Twitter, TikTok)
+- Unique content per domain (no duplication)
+- Direct links to domain websites
+- Call-to-action buttons to drive conversions
+- Daily performance tracking and optimization
+- Weekly reports on reach, engagement, traffic
+
+REQUIREMENTS:
+✓ Domain DNS fully operational
+✓ Auto-posting to all 5 social platforms
+✓ Audience segmentation per domain
+✓ Content calendar for 30 days
+✓ Performance analytics dashboard
+✓ Traffic attribution to websites
+✓ Conversion tracking (sign-ups, app downloads, inquiries)
+
+DELIVERABLES:
+1. All domains live with Firebase A records
+2. 750+ scheduled social media posts
+3. Active campaigns across 5 platforms
+4. Daily performance dashboards
+5. Monthly ROI report
+
+BUDGET: [As per GoDaddy marketing package]
+START: Immediate
+DURATION: 30 days (can extend based on performance)
+
+EXECUTE NOW

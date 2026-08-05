@@ -1,0 +1,348 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║                                                                            ║
+║        GODADDY DNS CONFIGURATION - BRANDED DOMAIN SETUP                   ║
+║                                                                            ║
+║  Map your purchased domains to Firebase Hosting                           ║
+║  Hide source code | Use brand names only | Professional appearance       ║
+║                                                                            ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+
+📋 YOUR BRANDED DOMAINS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Website                 Your Domain              Firebase Site
+─────────────────────────────────────────────────────────────────────────
+Qvedic                  www.prevleakgroup.co.za  qvedic-peld8
+Palettemath             www.palettemath.co.za    palettemath-peld8
+Saferide                www.saferideapp.co.za    saferide-peld8
+Rider Portal            www.rider.saferide.co.za rider-peld8
+Driver Portal           www.driver.saferide.co.za driver-peld8
+
+
+✅ STEP-BY-STEP SETUP
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PHASE 1: FIREBASE CONSOLE SETUP (Do First)
+───────────────────────────────────────────
+
+1. Go to: https://console.firebase.google.com/project/saferide-peld8
+2. Click: Hosting > Domains
+3. Click: Add Domain
+
+For each website, repeat these steps:
+
+   DOMAIN 1: QVEDIC
+   ─────────────────
+   Step 1: Click "Add Domain"
+   Step 2: Enter: www.prevleakgroup.co.za
+   Step 3: Select: qvedic-peld8 (from dropdown)
+   Step 4: Click "Continue"
+   Step 5: Copy DNS records shown (you'll need these)
+   Step 6: Firebase will verify DNS after you update GoDaddy
+   Status: PENDING (will show "Connected" after DNS updated)
+
+   DOMAIN 2: PALETTEMATH
+   ─────────────────────
+   Step 1: Click "Add Domain"
+   Step 2: Enter: www.palettemath.co.za
+   Step 3: Select: palettemath-peld8
+   Step 4: Click "Continue"
+   Step 5: Copy DNS records
+   Status: PENDING
+
+   DOMAIN 3: SAFERIDE
+   ──────────────────
+   Step 1: Click "Add Domain"
+   Step 2: Enter: www.saferideapp.co.za
+   Step 3: Select: saferide-peld8
+   Step 4: Click "Continue"
+   Step 5: Copy DNS records
+   Status: PENDING
+
+   DOMAIN 4: RIDER PORTAL
+   ──────────────────────
+   Step 1: Click "Add Domain"
+   Step 2: Enter: www.rider.saferide.co.za
+   Step 3: Select: rider-peld8
+   Step 4: Click "Continue"
+   Step 5: Copy DNS records
+   Status: PENDING
+
+   DOMAIN 5: DRIVER PORTAL
+   ──────────────────────
+   Step 1: Click "Add Domain"
+   Step 2: Enter: www.driver.saferide.co.za
+   Step 3: Select: driver-peld8
+   Step 4: Click "Continue"
+   Step 5: Copy DNS records
+   Status: PENDING
+
+
+PHASE 2: GODADDY DNS CONFIGURATION (Do Second)
+───────────────────────────────────────────────
+
+1. Go to: https://www.godaddy.com
+2. Log in to your account
+3. Click: "My Products" or "Domains"
+4. Find your domain
+5. Click: "Manage DNS"
+
+For EACH domain, you'll see DNS records.
+Firebase will provide you with specific records to add.
+
+Typical Firebase A Records (you'll get exact ones from Firebase):
+   • 199.36.158.100
+   • 199.36.159.100
+   • 199.36.160.100
+   • 199.36.161.100
+
+
+DOMAIN 1: www.prevleakgroup.co.za (QVEDIC)
+────────────────────────────────────────────
+
+1. In GoDaddy DNS Management, find "A Records" section
+2. Look for existing "www" record
+3. Update it OR create new one:
+
+   Type: A (Address Record)
+   Host/Name: www
+   Points to: 199.36.158.100 (Firebase will show exact IP)
+   TTL: 600 or 3600 (GoDaddy default is fine)
+   Priority: N/A (not needed for A records)
+
+4. Add remaining Firebase A records (usually 3-4 total)
+5. Remove old records pointing elsewhere
+6. Click Save
+
+Expected: Within 1-5 minutes, https://www.prevleakgroup.co.za shows your Qvedic website
+
+
+DOMAIN 2: www.palettemath.co.za (PALETTEMATH)
+──────────────────────────────────────────────
+
+1. In GoDaddy, go to DNS for palettemath.co.za
+2. Update A Record for "www":
+
+   Type: A
+   Host: www
+   Points to: [Firebase IP for palettemath-peld8]
+   TTL: 600
+
+3. Save changes
+
+Expected: https://www.palettemath.co.za → Palettemath website
+
+
+DOMAIN 3: www.saferideapp.co.za (SAFERIDE)
+───────────────────────────────────────────
+
+1. In GoDaddy, go to DNS for saferideapp.co.za
+2. Update A Record:
+
+   Type: A
+   Host: www
+   Points to: [Firebase IP for saferide-peld8]
+   TTL: 600
+
+3. Save
+
+Expected: https://www.saferideapp.co.za → Saferide website
+
+
+DOMAIN 4: www.rider.saferide.co.za (RIDER PORTAL)
+──────────────────────────────────────────────────
+
+This is a SUBDOMAIN. Setup:
+
+1. In GoDaddy DNS for saferide.co.za
+2. Add new A Record:
+
+   Type: A
+   Host: rider
+   Points to: [Firebase IP for rider-peld8]
+   TTL: 600
+
+3. Save
+
+Expected: https://www.rider.saferide.co.za → Rider website
+
+
+DOMAIN 5: www.driver.saferide.co.za (DRIVER PORTAL)
+────────────────────────────────────────────────────
+
+1. In GoDaddy DNS for saferide.co.za
+2. Add new A Record:
+
+   Type: A
+   Host: driver
+   Points to: [Firebase IP for driver-peld8]
+   TTL: 600
+
+3. Save
+
+Expected: https://www.driver.saferide.co.za → Driver website
+
+
+🔄 VERIFICATION STEPS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+After updating GoDaddy DNS:
+
+1. Go back to Firebase Console > Hosting > Domains
+2. Each domain should show "Connected" (green checkmark)
+3. Firebase auto-provides SSL certificate (2-15 minutes)
+4. Wait for "HTTPS Certificate Provisioning" to complete
+
+Test Each Domain:
+   □ Open: https://www.prevleakgroup.co.za → See Qvedic website
+   □ Open: https://www.palettemath.co.za → See Palettemath website
+   □ Open: https://www.saferideapp.co.za → See Saferide website
+   □ Open: https://www.rider.saferide.co.za → See Rider website
+   □ Open: https://www.driver.saferide.co.za → See Driver website
+
+All should show:
+   ✓ Green HTTPS lock icon (secure)
+   ✓ Palettemath banner at top
+   ✓ Colors cycling every 30 seconds
+   ✓ NO .web.app in URL (only your brand domain)
+   ✓ NO source code visible
+
+
+🔐 SECURITY: HIDE FIREBASE URLs
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Optional: Block Firebase temp URLs
+
+In Firebase Console > Hosting > [Select Site] > Settings:
+   • Keep "qvedic-peld8.web.app" as backup only
+   • Add redirect rule:
+     * Old domain: qvedic-peld8.web.app
+     * Redirect to: https://www.prevleakgroup.co.za
+     * Type: Permanent (301)
+   
+   Repeat for all 5 sites
+
+Result: Only your branded domains work publicly
+        Firebase .web.app URLs redirect to brand domains
+
+
+📊 DNS RECORDS SUMMARY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Domain                        Record Type  Host    Points To              Site
+─────────────────────────────────────────────────────────────────────────────
+prevleakgroup.co.za           A            www     [Firebase IP]         Qvedic
+palettemath.co.za             A            www     [Firebase IP]         Palettemath
+saferideapp.co.za             A            www     [Firebase IP]         Saferide
+rider.saferide.co.za          A            rider   [Firebase IP]         Rider
+driver.saferide.co.za         A            driver  [Firebase IP]         Driver
+
+
+⏱️ EXPECTED TIMELINE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+After updating GoDaddy DNS:
+
+1-2 minutes:  DNS change registered globally
+5-15 minutes: Firebase detects DNS update (shows "Connected")
+5-15 minutes: HTTPS certificate auto-provisioned (shows green lock)
+15-30 minutes: Full propagation (100% of ISPs see new DNS)
+
+Your websites will be LIVE at brand domains within ~15 minutes!
+
+
+📱 FINAL RESULT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Users visiting your sites will see:
+
+   Browser Address Bar:  https://www.palettemath.co.za
+                        (NOT qvedic-peld8.web.app)
+
+   Website Content:      Your Palettemath website
+                         ✓ With Palettemath API active
+                         ✓ Dynamic colors every 30 seconds
+                         ✓ Marketing banner visible
+                         ✓ No source code visible
+                         ✓ Professional appearance
+
+   Security:            HTTPS lock icon (green checkmark)
+
+   Performance:         <2 second load time
+                        Cached globally via Firebase CDN
+
+
+🆘 TROUBLESHOOTING
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PROBLEM: Firebase shows "Verification Pending" after 30 minutes
+─────────────────────────────────────────────────────────────
+Solution:
+1. Go to GoDaddy > DNS Settings for your domain
+2. Verify A records are set correctly
+3. Check TTL (Time To Live) - set to 600 or lower
+4. Wait another 15-30 minutes
+5. Refresh Firebase console
+
+PROBLEM: Domain shows error or blank page
+────────────────────────────────────────
+Solution:
+1. Make sure you added ALL Firebase A records (usually 4)
+2. Don't mix with other hosting service records
+3. Remove old A records pointing to other services
+4. Wait 5-10 minutes for DNS to propagate
+5. Clear browser cache (Ctrl+Shift+Del)
+
+PROBLEM: HTTPS certificate not provisioning
+─────────────────────────────────────────
+Solution:
+1. Make sure domain is "Connected" in Firebase
+2. Firebase needs 5-15 minutes to provision SSL
+3. Check Firebase > Hosting > Domains > [Your Domain]
+4. Status should change from "Provisioning" to "Connected"
+5. Refresh page to see updated status
+
+PROBLEM: www.yourdomain.co.za works but yourdomain.co.za doesn't
+──────────────────────────────────────────────────────────────
+Solution:
+1. Add BOTH records in GoDaddy:
+   • A record with Host: www
+   • A record with Host: @ (root domain)
+   Points to same Firebase IP
+2. Save both
+3. Wait 5-10 minutes
+
+
+📞 HELP RESOURCES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Firebase Custom Domains:
+   https://firebase.google.com/docs/hosting/custom-domain
+
+GoDaddy DNS Management:
+   https://www.godaddy.com/help/manage-dns-records-680
+
+GoDaddy A Records:
+   https://www.godaddy.com/help/add-an-a-record-19238
+
+Firebase Hosting:
+   https://console.firebase.google.com/project/saferide-peld8/hosting
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ AFTER COMPLETING GODADDY DNS SETUP:
+
+Your websites will be accessible ONLY via branded domains:
+  ✓ www.prevleakgroup.co.za (Qvedic)
+  ✓ www.palettemath.co.za (Palettemath)
+  ✓ www.saferideapp.co.za (Saferide)
+  ✓ www.rider.saferide.co.za (Rider)
+  ✓ www.driver.saferide.co.za (Driver)
+
+NO source code visible
+NO Firebase URLs exposed
+PROFESSIONAL brand appearance
+
+═══════════════════════════════════════════════════════════════════════════════

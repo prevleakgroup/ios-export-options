@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="Saferide logo">
-  <rect width="256" height="256" rx="56" fill="#ffffff"/>
-  <rect x="40" y="40" width="176" height="176" rx="36" fill="#0f172a"/>
-  <path d="M88 172c20-44 40-66 72-66 22 0 36 14 44 36" fill="none" stroke="#f28c28" stroke-width="18" stroke-linecap="round"/>
-  <path d="M102 176l26-50 26 50" fill="none" stroke="#f0b043" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
-  <circle cx="128" cy="128" r="12" fill="#f28c28"/>
-</svg>
