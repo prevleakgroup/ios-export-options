@@ -3,7 +3,7 @@
 # Run this on your local machine in the repo directory
 
 param(
-    [string]$SSHKeyPath = "$env:USERPROFILE\.ssh\id_ed25519_prevleakgroup",
+    [string]$SSHKeyPath = "$env:USERPROFILE\.ssh\id_ed25519",
     [string]$GCPJsonPath,
     [string]$FirebaseToken
 )

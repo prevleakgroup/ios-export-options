@@ -17,7 +17,7 @@ Write-Host "PART 1: Generate SSH Key (ed25519)" -ForegroundColor Yellow
 Write-Host "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" -ForegroundColor Yellow
 Write-Host ""
 
-$sshKeyPath = "$env:USERPROFILE\.ssh\id_ed25519_prevleakgroup"
+$sshKeyPath = "$env:USERPROFILE\.ssh\id_ed25519"
 $sshKeyPubPath = "$sshKeyPath.pub"
 
 Write-Host "📝 SSH Key Details:" -ForegroundColor Cyan
@@ -44,7 +44,7 @@ if (Test-Path $sshKeyPath) {
     
     # Generate SSH key (non-interactive, no passphrase)
     ssh-keygen -t ed25519 -a 64 `
-        -C "prevleakgroup@users.noreply.github.com" `
+        -C "your-github-username@users.noreply.github.com" `
         -f $sshKeyPath `
         -N ""
     

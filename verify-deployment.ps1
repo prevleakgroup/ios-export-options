@@ -190,7 +190,7 @@ Write-Host ""
 
 if (-not $allSecretsSet) {
     Write-Host "1️⃣  Add missing secrets:" -ForegroundColor Cyan
-    Write-Host "   ./setup-deployment.ps1 -SSHKeyPath '~/.ssh/id_ed25519_prevleakgroup' -GCPJsonPath 'path/to/gcp.json' -FirebaseToken 'token'" -ForegroundColor White
+    Write-Host "   ./setup-deployment.ps1 -SSHKeyPath '~/.ssh/id_ed25519' -GCPJsonPath 'path/to/gcp.json' -FirebaseToken 'token'" -ForegroundColor White
     Write-Host ""
 }
 
