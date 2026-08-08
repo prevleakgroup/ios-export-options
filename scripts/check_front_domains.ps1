@@ -20,7 +20,7 @@ foreach ($item in $expected) {
   $url = "https://$domain"
 
   Write-Output "Checking $url"
-  $trace = curl.exe -sS -L -o NUL -w "%{url_effective}|%{num_redirects}|%{http_code}" $url
+  $trace = curl.exe -sS -L --max-time 30 --connect-timeout 10 -o NUL -w "%{url_effective}|%{num_redirects}|%{http_code}" $url
 
   if ($LASTEXITCODE -ne 0) {
     $failures += "curl failed for $domain"
