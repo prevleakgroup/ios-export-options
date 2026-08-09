@@ -105,6 +105,59 @@ jobs:
             echo ""
           done
 
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Upsert TXT, SPF, and DMARC records
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          SOURCE_OF_TRUTH="company-docs/routing-dns-source-of-truth.json"
+
+          DOMAINS=($(jq -r '.dnsPolicy.domains[]' "$SOURCE_OF_TRUTH"))
+          TXT_TAG=$(jq -r '.dnsPolicy.apexTxtRequired[0]' "$SOURCE_OF_TRUTH")
+          SPF_RECORD=$(jq -r '.dnsPolicy.apexTxtRequired[1]' "$SOURCE_OF_TRUTH")
+          DMARC_RECORD=$(jq -r '.dnsPolicy.dmarcRequired' "$SOURCE_OF_TRUTH")
+
+          BASE_URL="https://api.godaddy.com/v3/domains/zones"
+
+          upsert_txt() {
+            local domain="$1"
+            local name="$2"
+            local data="$3"
+
+            existing="$(curl --fail-with-body --silent --show-error \
+              --get \
+              --header "Authorization: $GODADDY_PAT" \
+              --data-urlencode 'type=TXT' \
+              --data-urlencode "name=$name" \
+              "${BASE_URL}/${domain}/dns-records")"
+
+            if echo "$existing" | jq --exit-status --arg d "$data" \
+                '.items[]? | select(.data == $d)' > /dev/null 2>&1; then
+              echo "  ✓ TXT $name → already exists for $domain"
+            else
+              echo "  + Creating TXT $name → $data for $domain"
+              curl --fail-with-body --silent --show-error \
+                --request POST \
+                --header "Authorization: $GODADDY_PAT" \
+                --header 'Content-Type: application/json' \
+                --data "$(jq -cn --arg n "$name" --arg d "$data" \
+                  '{name:$n,type:"TXT",data:$d,ttl:3600}')" \
+                "${BASE_URL}/${domain}/dns-records"
+              echo "  ✓ Created"
+            fi
+          }
+
+          for domain in "${DOMAINS[@]}"; do
+            echo "=== $domain ==="
+            upsert_txt "$domain" "@" "$TXT_TAG"
+            upsert_txt "$domain" "@" "$SPF_RECORD"
+            upsert_txt "$domain" "_dmarc" "$DMARC_RECORD"
+            echo ""
+          done
+
       - name: Verify DNS propagation
         shell: bash
         run: |
@@ -134,15 +187,19 @@ jobs:
         shell: bash
         run: |
           cat >> "$GITHUB_STEP_SUMMARY" << 'EOF'
-          ## Configure GoDaddy DNS (Firebase Hosting)
+          ## Configure GoDaddy DNS (Firebase Hosting + Email)
 
           | Domain | Records |
           |--------|---------|
-          | prevleakgroup.co.za | 2× A (Firebase Hosting) + CNAME www → prevleakgroup-peld8.web.app |
+          | prevleakgroup.co.za | 2× A (Firebase Hosting) + CNAME www → prevleakgroup-peld8.web.app + TXT (T9229417, SPF) + _dmarc TXT |
           | prevleak.company | 2× A (Firebase Hosting) + CNAME www → prevleak-peld8.web.app |
           | saferide.company | 2× A (Firebase Hosting) + CNAME www → saferide-peld8.web.app |
-          | palettemath.net | 2× A (Firebase Hosting) + CNAME www → palettemath-peld8.web.app |
+          | palettemath.net | 2× A (Firebase Hosting) + CNAME www → palettemath-peld8.web.app + TXT (T9229417, SPF) + _dmarc TXT |
           | qvedic.company | 2× A (Firebase Hosting) + CNAME www → qvedic-peld8.web.app |
+          | saferideapp.co.za | TXT (T9229417, SPF) + _dmarc TXT |
+          | saferiderapp.co.za | TXT (T9229417, SPF) + _dmarc TXT |
+          | saferidesapp.co.za | TXT (T9229417, SPF) + _dmarc TXT |
+          | prevleakgroup.com | TXT (T9229417, SPF) + _dmarc TXT |
 
           **Next step:** In the Firebase Console, add each domain as a custom domain under
           Hosting → Custom domains. Firebase will verify ownership via the A records and
