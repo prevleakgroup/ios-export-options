@@ -1,0 +1,231 @@
+name: Check and Publish Verified Domains
+
+# Triggered manually or on a schedule to check domain TXT verification and
+# deploy Firebase Hosting only for the brands whose domains are confirmed verified.
+on:
+  workflow_dispatch:
+    inputs:
+      force_deploy:
+        description: 'Deploy all targets even if DNS check is pending (use only for testing)'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'false'
+          - 'true'
+  schedule:
+    # Re-check every 6 hours; stop when all domains are verified.
+    - cron: '0 */6 * * *'
+
+permissions:
+  contents: read
+
+# ---------------------------------------------------------------------------
+# Domain → Firebase hosting target mapping
+#
+# Each entry encodes:
+#   txt_hostname   – the full DNS hostname we query for the verification TXT record
+#   expected_value – the expected partial value in the TXT record
+#   firebase_target – the firebase.json "target" name to deploy when verified
+#   public_dir      – the directory served (must match firebase.json "public")
+# ---------------------------------------------------------------------------
+
+jobs:
+  # ─────────────────────────────────────────────────────────────────────────
+  # JOB 1 – DNS verification check
+  # Queries public DNS for each domain's TXT record and produces a JSON
+  # matrix of verified targets that the deploy job will consume.
+  # ─────────────────────────────────────────────────────────────────────────
+  check-dns:
+    name: Check domain TXT verification
+    runs-on: ubuntu-latest
+    outputs:
+      verified_targets: ${{ steps.check.outputs.verified_targets }}
+      report: ${{ steps.check.outputs.report }}
+      all_verified: ${{ steps.check.outputs.all_verified }}
+
+    steps:
+      - name: Query DNS and build verified-targets list
+        id: check
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          # ── domain map ────────────────────────────────────────────────────
+          # Format: "txt_hostname|expected_partial_value|firebase_target|public_dir"
+          # public_dir is relative to repo root (used in the deploy step).
+          declare -a DOMAIN_MAP=(
+            "_gh-prevleak-group-e.saferideapp.co.za|1ad1da9efc|saferide|download-site/saferide-site"
+            "_gh-prevleak-group-e.saferiderapp.co.za|67e70f1f02|saferide|download-site/saferide-site"
+            "_gh-prevleak-group-e.saferidesapp.co.za|37e1758b0f|saferide|download-site/saferide-site"
+            "_gh-prevleak-group-e.www.palettemath.co.za|08e59e3b12|palettemath|download-site/palettemath-site"
+            "_gh-prevleak-group-e.www.prevleakgroup.co.za|4ba15a2805|prevleakgroup|download-site"
+          )
+
+          report=""
+          # Use an associative array to track which firebase targets are verified.
+          declare -A target_verified=()
+          declare -A target_public=()
+
+          for entry in "${DOMAIN_MAP[@]}"; do
+            IFS='|' read -r hostname expected target public_dir <<< "$entry"
+
+            # Query Cloudflare's resolver (1.1.1.1) for TXT records.
+            actual="$(dig +short TXT "${hostname}" @1.1.1.1 2>/dev/null | tr -d '"' || true)"
+
+            if [[ "${INPUT_FORCE_DEPLOY:-false}" == "true" ]]; then
+              status="✅ FORCED"
+              target_verified["$target"]="true"
+              target_public["$target"]="$public_dir"
+            elif [[ "$actual" == *"$expected"* ]]; then
+              status="✅ VERIFIED"
+              target_verified["$target"]="true"
+              target_public["$target"]="$public_dir"
+            else
+              status="⏳ PENDING"
+            fi
+
+            report+="| ${hostname} | ${status} |"$'\n'
+            echo "${status}  ${hostname}"
+          done
+
+          # Build JSON array of verified targets for the matrix.
+          json_targets="[]"
+          all_verified="true"
+          for entry in "${DOMAIN_MAP[@]}"; do
+            IFS='|' read -r hostname expected target public_dir <<< "$entry"
+            if [[ "${target_verified[$target]:-false}" != "true" ]]; then
+              all_verified="false"
+            fi
+          done
+
+          verified_json="["
+          first=true
+          for target in "${!target_verified[@]}"; do
+            [[ "$first" != "true" ]] && verified_json+=","
+            verified_json+="{\"target\":\"${target}\",\"public_dir\":\"${target_public[$target]}\"}"
+            first=false
+          done
+          verified_json+="]"
+
+          echo "verified_targets=${verified_json}" >> "$GITHUB_OUTPUT"
+          echo "all_verified=${all_verified}"       >> "$GITHUB_OUTPUT"
+
+          # Multi-line report needs special encoding.
+          {
+            echo "report<<REPORT_EOF"
+            echo "| DNS Hostname | Status |"
+            echo "|---|---|"
+            echo "$report"
+            echo "REPORT_EOF"
+          } >> "$GITHUB_OUTPUT"
+        env:
+          INPUT_FORCE_DEPLOY: ${{ inputs.force_deploy }}
+
+      - name: Print verification summary
+        shell: bash
+        run: |
+          echo "### Domain Verification Summary"
+          echo "| DNS Hostname | Status |"
+          echo "|---|---|"
+          echo "${{ steps.check.outputs.report }}"
+          echo ""
+          echo "Verified targets JSON: ${{ steps.check.outputs.verified_targets }}"
+          echo "All domains verified:  ${{ steps.check.outputs.all_verified }}"
+
+  # ─────────────────────────────────────────────────────────────────────────
+  # JOB 2 – Firebase Hosting deployment (only for verified targets)
+  # ─────────────────────────────────────────────────────────────────────────
+  deploy-verified:
+    name: Deploy verified Firebase Hosting targets
+    needs: check-dns
+    runs-on: ubuntu-latest
+    # Only run if at least one target is verified (JSON array is non-empty).
+    if: needs.check-dns.outputs.verified_targets != '[]'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Firebase CLI
+        run: npm install -g firebase-tools@latest
+
+      - name: Build deploy target list
+        id: targets
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Parse the JSON array from the previous job and build the
+          # "hosting:target1,hosting:target2" string for firebase deploy.
+          verified='${{ needs.check-dns.outputs.verified_targets }}'
+          echo "Verified targets: ${verified}"
+
+          # Use python (always available on ubuntu-latest) for safe JSON parsing.
+          deploy_string=$(python3 -c "
+          import json, sys
+          targets = json.loads(sys.argv[1])
+          parts = ['hosting:' + t['target'] for t in targets]
+          print(','.join(parts))
+          " "$verified")
+
+          echo "deploy_string=${deploy_string}" >> "$GITHUB_OUTPUT"
+          echo "Will deploy: ${deploy_string}"
+
+      - name: Deploy to Firebase Hosting (verified targets only)
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+        run: |
+          echo "Deploying: ${{ steps.targets.outputs.deploy_string }}"
+          firebase deploy \
+            --only "${{ steps.targets.outputs.deploy_string }}" \
+            --project saferide-peld8 \
+            --token "$FIREBASE_TOKEN" \
+            --non-interactive
+
+      - name: List deployed hosting sites
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+        run: |
+          firebase hosting:sites:list \
+            --project saferide-peld8 \
+            --token "$FIREBASE_TOKEN"
+        continue-on-error: true
+
+  # ─────────────────────────────────────────────────────────────────────────
+  # JOB 3 – Final status report (always runs)
+  # ─────────────────────────────────────────────────────────────────────────
+  report-status:
+    name: Report domain + deployment status
+    needs: [check-dns, deploy-verified]
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Summarise results
+        shell: bash
+        run: |
+          echo "## ✅ Check and Publish Verified Domains – Run Summary"
+          echo ""
+          echo "### Domain Verification"
+          echo "| DNS Hostname | Status |"
+          echo "|---|---|"
+          echo "${{ needs.check-dns.outputs.report }}"
+          echo ""
+
+          if [[ "${{ needs.check-dns.outputs.verified_targets }}" == "[]" ]]; then
+            echo "### Deployment"
+            echo "No domains verified yet – deployment was skipped."
+            echo "Re-run this workflow once DNS propagation completes."
+          else
+            echo "### Deployment"
+            echo "Verified targets deployed: \`${{ needs.check-dns.outputs.verified_targets }}\`"
+            echo "Deploy job status: **${{ needs.deploy-verified.result }}**"
+          fi
+
+          echo ""
+          echo "All domains verified: ${{ needs.check-dns.outputs.all_verified }}"
