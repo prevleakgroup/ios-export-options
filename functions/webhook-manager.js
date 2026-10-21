@@ -18,6 +18,7 @@ const admin = require('firebase-admin');
 const functions = require('firebase-functions');
 const axios = require('axios');
 const crypto = require('crypto');
+const { createGoDaddyClient } = require('./godaddy-client');
 
 const db = admin.firestore();
 const pubsub = admin.pubsub();
@@ -411,6 +412,13 @@ class WebhookManager {
     }
 
     try {
+      const godaddyClient = createGoDaddyClient({
+        apiKey: godaddyKey,
+        apiSecret: godaddySecret,
+      });
+
+      await godaddyClient.domains.get({ domain: domainName });
+
       const response = await axios.post(
         `https://api.godaddy.com/v1/domains/${domainName}/webhook`,
         {
