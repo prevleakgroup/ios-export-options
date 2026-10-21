@@ -31,6 +31,7 @@
 | Full Infrastructure | [INFRASTRUCTURE-COMPLETE.md](./INFRASTRUCTURE-COMPLETE.md) | Architects, DevOps |
 | GitHub Workflows | [GITHUB-DEPLOYMENT.md](./GITHUB-DEPLOYMENT.md) | Developers, DevOps |
 | CI/CD Quick Ref | [GITHUB-CI-CD-QUICK-START.md](./GITHUB-CI-CD-QUICK-START.md) | All developers |
+| Firebase Hosting + GoDaddy DNS | [FIREBASE-HOSTING-CICD-GODADDY-DOMAINS.md](./FIREBASE-HOSTING-CICD-GODADDY-DOMAINS.md) | DevOps, release managers |
 | AI/ML Workflows | [GENKIT-SETUP.md](./GENKIT-SETUP.md) | ML Engineers |
 
 ---
